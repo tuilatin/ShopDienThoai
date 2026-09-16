@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App, { DanhMucLoader, ErrorBoundary } from "./App.jsx";
+import App, { DanhMucLoader } from "./App.jsx";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -10,12 +10,7 @@ import {
 } from "react-router-dom";
 
 const routeDenfinitions = createRoutesFromElements(
-  <Route
-    path="/"
-    element={<App />}
-    loader={DanhMucLoader}
-    errorElement={<ErrorBoundary />}
-  />,
+  <Route path="/" element={<App />} loader={DanhMucLoader} />,
 );
 
 const appRouter = createBrowserRouter(routeDenfinitions);
