@@ -1,10 +1,27 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App, { DanhMucLoader, ErrorBoundary } from "./App.jsx";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
 
-createRoot(document.getElementById('root')).render(
+const routeDenfinitions = createRoutesFromElements(
+  <Route
+    path="/"
+    element={<App />}
+    loader={DanhMucLoader}
+    errorElement={<ErrorBoundary />}
+  />,
+);
+
+const appRouter = createBrowserRouter(routeDenfinitions);
+
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={appRouter} />
   </StrictMode>,
-)
+);
