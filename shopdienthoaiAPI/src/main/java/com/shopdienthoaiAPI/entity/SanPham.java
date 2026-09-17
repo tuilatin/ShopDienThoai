@@ -37,6 +37,10 @@ public class SanPham {
     @Column(name = "\"SoLuongTon\"", nullable = false)
     private Integer soLuongTon;
 
+    @Size(max = 500)
+    @Column(name = "\"HinhAnh\"", length = 500)
+    private String hinhAnh;
+
     @Column(name = "\"MoTa\"", length = Integer.MAX_VALUE)
     private String moTa;
 
