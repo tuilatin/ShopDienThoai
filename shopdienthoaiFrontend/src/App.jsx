@@ -1,8 +1,8 @@
 import "./App.css";
-import KhoSoShop from "./components/KhoSoShop";
+import { Outlet } from "react-router-dom";
 
 function App() {
-  return <KhoSoShop />;
+  return <Outlet />;
 }
 
 export default App;
