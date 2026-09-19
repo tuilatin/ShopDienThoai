@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import { DanhMucLoader } from "./components/Home.jsx";
 import Home from "./components/Home.jsx";
 import Login from "./components/Login.jsx";
+import Register from "./components/Register.jsx";
 
 import {
   createBrowserRouter,
@@ -17,6 +18,7 @@ const routeDenfinitions = createRoutesFromElements(
   <Route path="/" element={<App />}>
     <Route index element={<Home />} loader={DanhMucLoader} />
     <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Register />} />
   </Route>,
 );
 
