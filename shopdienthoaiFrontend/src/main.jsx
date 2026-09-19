@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { DanhMucLoader } from "./components/Home.jsx";
 import Home from "./components/Home.jsx";
+import Login from "./components/Login.jsx";
 
 import {
   createBrowserRouter,
@@ -15,6 +16,7 @@ import {
 const routeDenfinitions = createRoutesFromElements(
   <Route path="/" element={<App />}>
     <Route index element={<Home />} loader={DanhMucLoader} />
+    <Route path="/login" element={<Login />} />
   </Route>,
 );
 

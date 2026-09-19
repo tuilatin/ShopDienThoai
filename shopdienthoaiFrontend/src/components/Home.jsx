@@ -1,4 +1,5 @@
 import { useLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const danhMucs = useLoaderData();
@@ -6,21 +7,26 @@ export default function Home() {
     return <div>Lỗi tải danh mục</div>;
   }
   return (
-    <div className="App">
-      {danhMucs.length === 0 ? (
-        <p>Không có danh mục nào.</p>
-      ) : (
-        <ul>
-          {danhMucs.map((danhMuc) => (
-            <li key={danhMuc.maDanhMuc}>
-              <p>Mã danh mục: {danhMuc.maDanhMuc}</p>
-              <p>Tên danh mục: {danhMuc.tenDanhMuc}</p>
-              <p>Mô tả: {danhMuc.moTa}</p>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      <Link to="/login"  className={({ isActive }) =>
+                    isActive ? `underline` : ""
+                  }>Đăng nhập</Link>
+      <div className="App">
+        {danhMucs.length === 0 ? (
+          <p>Không có danh mục nào.</p>
+        ) : (
+          <ul>
+            {danhMucs.map((danhMuc) => (
+              <li key={danhMuc.maDanhMuc}>
+                <p>Mã danh mục: {danhMuc.maDanhMuc}</p>
+                <p>Tên danh mục: {danhMuc.tenDanhMuc}</p>
+                <p>Mô tả: {danhMuc.moTa}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }
 
