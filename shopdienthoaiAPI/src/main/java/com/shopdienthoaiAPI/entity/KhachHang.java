@@ -23,12 +23,10 @@ public class KhachHang {
     private String maKhachHang;
 
     @Size(max = 100)
-    @NotNull
     @Column(name = "\"TenKhachHang\"", nullable = false, length = 100)
     private String tenKhachHang;
 
     @Size(max = 20)
-    @NotNull
     @Column(name = "\"SoDienThoai\"", nullable = false, length = 20)
     private String soDienThoai;
 

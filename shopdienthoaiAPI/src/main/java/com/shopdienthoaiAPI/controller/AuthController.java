@@ -17,6 +17,6 @@ public class AuthController {
   @PostMapping("/dangKy")
     public ResponseEntity<String> dangKyTaiKhoan(@RequestBody String tenDangNhap,
                                                  String matKhau){
-        taiKhoanRepository
+
   }
 }
