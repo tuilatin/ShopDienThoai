@@ -21,7 +21,7 @@ public class TaiKhoan {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "\"MaKhachHang\"")
-    private KhachHang maKhachHang;
+    private KhachHang khachHang;
 
     @Size(max = 50)
     @NotNull
