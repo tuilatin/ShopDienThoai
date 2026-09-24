@@ -1,5 +1,7 @@
 package com.shopdienthoaiAPI.service;
 
+import com.shopdienthoaiAPI.dto.DangkyRequestDto;
+
 public interface IAuthService {
-    void register(String username, String password);
+    void register(DangkyRequestDto requestDto);
 }
