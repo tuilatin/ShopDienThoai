@@ -16,7 +16,7 @@ public class AuthServiceImpl implements IAuthService {
     private final TaiKhoanRepository taiKhoanRepository;
 
     private String generateCustomerId(){
-        return khachHangRepository.findTopByMaKhachHangDesc()
+        return khachHangRepository.findTopByOrderByMaKhachHangDesc()
                 .map(khachHang -> {
                     String currentId = khachHang.getMaKhachHang();
                     int currentNumber = Integer.parseInt(currentId.substring(2));
@@ -24,14 +24,15 @@ public class AuthServiceImpl implements IAuthService {
                         }).orElse("KH001");
     }
 
-    private String generateAccountId(){
-        return khachHangRepository.findTopByMaKhachHangDesc()
-                .map(khachHang -> {
-                    String currentId = khachHang.getMaKhachHang();
-                    int currentNumber = Integer.parseInt(currentId.substring(2));
-                    return String.format("TK%03d", currentNumber + 1);
-                }).orElse("TK001");
-    }
+private String generateAccountId() {
+    return taiKhoanRepository.findTopByOrderByMaTaiKhoanDesc()
+            .map(taiKhoan -> {
+                String currentId = taiKhoan.getMaTaiKhoan();
+                int currentNumber = Integer.parseInt(currentId.substring(2));
+                return String.format("TK%03d", currentNumber + 1);
+            })
+            .orElse("TK001");
+}
 
     @Override
     public void register(DangkyRequestDto requestDto) {
@@ -44,6 +45,8 @@ public class AuthServiceImpl implements IAuthService {
         taiKhoan.setKhachHang(khachHang);
         taiKhoan.setTenDangNhap(requestDto.username());
         taiKhoan.setMatKhauHash(requestDto.password());
+        taiKhoan.setVaiTro("CUSTOMER");
+        taiKhoan.setTrangThai("ACTIVE");
         taiKhoanRepository.save(taiKhoan);
     }
 }

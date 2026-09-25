@@ -1,4 +1,5 @@
 import { Form } from "react-router-dom";
+import apiClient from "../api/apiClient";
 
 const labelStyle =
   "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
@@ -45,14 +46,14 @@ export default function Register() {
         </div>
 
         <div>
-          <label htmlFor="password" className={labelStyle}>
+          <label htmlFor="confirmPassword" className={labelStyle}>
             Xác nhận lại mật khẩu
           </label>
           <input
-            id="password"
+            id="confirmPassword"
             type="password"
-            name="password"
-            placeholder="Your Password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
             autoComplete="current-password"
             required
             minLength={4}
@@ -60,7 +61,33 @@ export default function Register() {
             className={textFieldStyle}
           />
         </div>
+
+        <button type="submit" className="mt-10 border-4 border-indigo-500/100 ">
+          Đăng ký
+        </button>
       </div>
     </Form>
   );
+}
+
+export async function registerAction({ request }) {
+  const data = await request.formData();
+  const registerData = {
+    username: data.get("username"),
+    password: data.get("password"),
+  };
+  try {
+    const response = await apiClient.post("/auth/dangKy", registerData);
+    return { success: true };
+  } catch (error) {
+    if (error.response?.status === 400) {
+      return { success: false, errors: error.response?.data };
+    }
+    throw new Response(
+      error.response?.data?.errorMessage ||
+        error.message ||
+        "Failed to submit your message. Please try again.",
+      { status: error.status || 500 },
+    );
+  }
 }
