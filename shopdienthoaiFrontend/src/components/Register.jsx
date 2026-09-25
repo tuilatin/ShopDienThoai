@@ -1,5 +1,5 @@
-import { Form } from "react-router-dom";
 import apiClient from "../api/apiClient";
+import { Form, useActionData } from "react-router-dom";
 
 const labelStyle =
   "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
@@ -7,9 +7,20 @@ const textFieldStyle =
   "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary dark:focus:border-primary";
 
 export default function Register() {
+  const actionData = useActionData();
+
   return (
     <Form method="POST" className="space-y-6">
-      {/* Username Field */}
+      {actionData?.success && (
+        <div className="text-green-500">Đăng ký thành công!</div>
+      )}
+
+      {actionData?.errors && (
+        <p className="mb-4 text-sm font-medium text-red-600">
+          Đăng ký thất bại. Tên đăng nhập có thể đã tồn tại.
+        </p>
+      )}
+
       <div>
         {/* Email Field */}
         <div>
