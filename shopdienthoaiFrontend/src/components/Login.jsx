@@ -45,6 +45,12 @@ export default function Login() {
         </div>
 
         {/* Submit Button */}
+        <button
+          type="submit"
+          className="mt-10 border-4 border-indigo-500/100 hover:cursor-pointer"
+        >
+          Đăng Nhập
+        </button>
       </Form>
 
       <p className="text-center text-gray-600 dark:text-gray-400 mt-4">

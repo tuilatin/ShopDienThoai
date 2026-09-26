@@ -73,7 +73,10 @@ export default function Register() {
           />
         </div>
 
-        <button type="submit" className="mt-10 border-4 border-indigo-500/100 ">
+        <button
+          type="submit"
+          className="mt-10 border-4 border-indigo-500/100 hover:cursor-pointer"
+        >
           Đăng ký
         </button>
       </div>
@@ -91,14 +94,9 @@ export async function registerAction({ request }) {
     const response = await apiClient.post("/auth/dangKy", registerData);
     return { success: true };
   } catch (error) {
-    if (error.response?.status === 400) {
-      return { success: false, errors: error.response?.data };
-    }
-    throw new Response(
-      error.response?.data?.errorMessage ||
-        error.message ||
-        "Failed to submit your message. Please try again.",
-      { status: error.status || 500 },
-    );
+    return {
+      success: false,
+      errors: error.response?.data?.errorMessage,
+    };
   }
 }
