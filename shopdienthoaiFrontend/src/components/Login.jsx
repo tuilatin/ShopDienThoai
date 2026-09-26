@@ -1,4 +1,6 @@
-import { Form, apiClient, Link } from "react-router-dom";
+import { Form, Link, redirect } from "react-router-dom";
+import { useActionData } from "react-router-dom";
+import apiClient from "../api/apiClient";
 
 const labelStyle =
   "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
@@ -6,10 +8,22 @@ const textFieldStyle =
   "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary dark:focus:border-primary";
 
 export default function Login() {
+  const actionData = useActionData();
+
   return (
     <>
       <Form method="POST" className="space-y-6">
         {/* Email Field */}
+        {actionData?.success && (
+          <div className="text-green-500">Đăng nhập thành công!</div>
+        )}
+
+        {actionData?.errors && (
+          <p className="mb-4 text-sm font-medium text-red-600">
+            Đăng nhập thất bại. Tên đăng nhập hoặc mật khẩu không đúng.
+          </p>
+        )}
+
         <div>
           <label htmlFor="username" className={labelStyle}>
             Tài Khoản{" "}
@@ -73,6 +87,9 @@ export async function loginAction({ request }) {
   };
 
   try {
-    const response = await apiClient.post("/auth/login", loginData);
-  } catch (error) {}
+    const response = await apiClient.post("/auth/dangnhap", loginData);
+    return redirect("/"); // Redirect to the home page after successful login
+  } catch (error) {
+    return { success: false, message: error.response.data.message };
+  }
 }

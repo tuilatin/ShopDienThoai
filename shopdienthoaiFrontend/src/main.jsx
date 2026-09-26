@@ -7,6 +7,7 @@ import Home from "./components/Home.jsx";
 import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import { registerAction } from "./components/Register.jsx";
+import { loginAction } from "./components/Login.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 
 import {
@@ -19,7 +20,7 @@ import {
 const routeDenfinitions = createRoutesFromElements(
   <Route path="/" element={<App />}>
     <Route index element={<Home />} loader={DanhMucLoader} />
-    <Route path="/login" element={<Login />} />
+    <Route path="/login" element={<Login />} action={loginAction} />
     <Route
       path="/register"
       element={<Register />}

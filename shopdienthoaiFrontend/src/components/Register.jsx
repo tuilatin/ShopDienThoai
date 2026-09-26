@@ -91,7 +91,7 @@ export async function registerAction({ request }) {
     password: data.get("password"),
   };
   try {
-    const response = await apiClient.post("/auth/dangKy", registerData);
+    const response = await apiClient.post("/auth/dangky", registerData);
     return { success: true };
   } catch (error) {
     return {

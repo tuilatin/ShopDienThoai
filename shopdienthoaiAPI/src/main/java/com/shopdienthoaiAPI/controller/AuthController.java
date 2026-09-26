@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final IAuthService authService;
 
-    @PostMapping("/dangKy")
+    @PostMapping("/dangky")
     public ResponseEntity<String> dangKyTaiKhoan(@RequestBody DangkyRequestDto dangkyRequestDto) {
         authService.register(dangkyRequestDto);
         return ResponseEntity.ok("Đăng ký thành công");
     }
 
-    @PostMapping("/dangNhap")
+    @PostMapping("/dangnhap")
     public ResponseEntity<String> dangnhapTaiKhoan(@RequestBody DangNhapRequestDto dangnhapRequestDto) {
         if(authService.login(dangnhapRequestDto)){
             return ResponseEntity.ok("Đăng nhập thành công rồi bạn ơi");
