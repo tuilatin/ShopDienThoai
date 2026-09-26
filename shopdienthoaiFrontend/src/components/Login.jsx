@@ -1,5 +1,4 @@
-import { Form } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Form, apiClient, Link } from "react-router-dom";
 
 const labelStyle =
   "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
@@ -64,4 +63,16 @@ export default function Login() {
       </Link>
     </>
   );
+}
+
+export async function loginAction({ request }) {
+  const loginFormData = await request.formData();
+  const loginData = {
+    username: loginFormData.get("username"),
+    password: loginFormData.get("password"),
+  };
+
+  try {
+    const response = await apiClient.post("/auth/login", loginData);
+  } catch (error) {}
 }

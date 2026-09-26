@@ -21,7 +21,7 @@ public class AuthController {
         return ResponseEntity.ok("Đăng ký thành công");
     }
 
-    @PostMapping("/dangnhap")
+    @PostMapping("/dangNhap")
     public ResponseEntity<String> dangnhapTaiKhoan(@RequestBody DangNhapRequestDto dangnhapRequestDto) {
         if(authService.login(dangnhapRequestDto)){
             return ResponseEntity.ok("Đăng nhập thành công rồi bạn ơi");
