@@ -19,6 +19,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
         return sanPhamRepository.findAll().stream()
                 .map(sp -> new SanPhamDto.Response
                         (sp.getMaSanPham(), sp.getTenSanPham(),
-                                sp.getGiaBan(), sp.getSoLuongTon(), sp.getMoTa())).toList();
+                        sp.getGiaBan(), sp.getSoLuongTon(), sp.getHinhAnh(), sp.getMoTa())).toList();
     }
 }

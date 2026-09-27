@@ -23,6 +23,6 @@ public class SanPhamDto{
     // Trả dữ liệu về cho Client / React
     public record Response(
             String maSanPham, String tenSanPham, BigDecimal giaBan,
-            Integer soLuongTon, String moTa
+            Integer soLuongTon, String hinhAnh, String moTa
     ) {}
 }
