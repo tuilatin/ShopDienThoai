@@ -29,48 +29,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#f7f8fa] text-[#17191d]">
-      <header className="border-b border-black/5 bg-white">
-        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link
-            to="/"
-            className="flex items-center gap-2.5"
-            aria-label="Techline - Trang chủ"
-          >
-            <span className="grid size-9 place-items-center rounded-xl bg-[#e94f37] text-white">
-              <Smartphone size={19} strokeWidth={2.2} />
-            </span>
-            <span className="text-lg font-bold tracking-tight">
-              techline<span className="text-[#e94f37]">.</span>
-            </span>
-          </Link>
-
-          <nav className="hidden items-center gap-8 text-sm font-medium text-[#666b75] md:flex">
-            <a href="#danh-muc" className="transition hover:text-[#e94f37]">
-              Danh mục
-            </a>
-            <a href="#san-pham" className="transition hover:text-[#e94f37]">
-              Sản phẩm
-            </a>
-          </nav>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <a
-              href="#san-pham"
-              aria-label="Xem sản phẩm"
-              className="grid size-10 place-items-center rounded-full text-[#343943] transition hover:bg-[#f2f3f5] md:hidden"
-            >
-              <ShoppingBag size={19} />
-            </a>
-            <Link
-              to="/login"
-              className="rounded-full border border-[#e5e6e9] px-4 py-2 text-sm font-semibold transition hover:border-[#17191d] hover:bg-[#17191d] hover:text-white sm:px-5"
-            >
-              Đăng nhập
-            </Link>
-          </div>
-        </div>
-      </header>
-
       <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <section
           id="danh-muc"
@@ -99,13 +57,13 @@ export default function Home() {
               {danhMucs.map((danhMuc, index) => (
                 <article
                   key={danhMuc.maDanhMuc}
-                  className="min-h-32 rounded-2xl border border-[#e9eaed] bg-white p-4 transition hover:-translate-y-0.5 hover:border-[#f0b3a8] hover:shadow-md hover:shadow-[#20242c]/5"
+                  className="rounded-2xl border border-[#e9eaed] bg-white p-4 transition hover:-translate-y-0.5 hover:border-[#f0b3a8] hover:shadow-md hover:shadow-[#20242c]/5"
                 >
-                  <span
+                  {/* <span
                     className={`mb-4 grid size-9 place-items-center rounded-xl text-sm font-bold ${index % 2 === 0 ? "bg-[#fff0ec] text-[#d64a34]" : "bg-[#edf2fa] text-[#45658f]"}`}
                   >
                     {String(index + 1).padStart(2, "0")}
-                  </span>
+                  </span> */}
                   <h3 className="font-semibold">{danhMuc.tenDanhMuc}</h3>
                 </article>
               ))}
@@ -163,51 +121,53 @@ export default function Home() {
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filteredProducts.map((sanPham) => (
-                <article
-                  key={sanPham.maSanPham}
-                  className="group overflow-hidden rounded-2xl border border-[#e8e9ec] bg-white transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#20242c]/[0.07]"
-                >
-                  <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-[#f1f3f6] p-5">
-                    {sanPham.hinhAnh ? (
-                      <img
-                        src={sanPham.hinhAnh}
-                        alt={sanPham.tenSanPham}
-                        loading="lazy"
-                        className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
-                      />
-                    ) : (
-                      <Smartphone
-                        className="size-16 text-[#b2b7c0]"
-                        strokeWidth={1}
-                      />
-                    )}
-                    <span
-                      className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-semibold ${sanPham.soLuongTon > 0 ? "bg-white text-[#4b7259]" : "bg-[#fff0ec] text-[#c74430]"}`}
-                    >
-                      {sanPham.soLuongTon > 0 ? "Còn hàng" : "Hết hàng"}
-                    </span>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="min-h-12 font-semibold leading-6">
-                      {sanPham.tenSanPham}
-                    </h3>
-                    {/* <p className="mt-1 line-clamp-2 min-h-10 text-sm leading-5 text-[#777c85]">
-                      {sanPham.moTa || ""}
-                    </p> */}
-                    <div className="mt-4 flex items-center justify-between gap-2 border-t border-[#f0f1f3] pt-3">
-                      <span className="font-bold text-[#e94f37]">
-                        {formatCurrency(sanPham.giaBan)}
-                      </span>
-                      <span className="text-xs text-[#858a94]">
-                        Kho: {sanPham.soLuongTon ?? 0}
+            <Link to="/chitietsanpham">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {filteredProducts.map((sanPham) => (
+                  <article
+                    key={sanPham.maSanPham}
+                    className="group overflow-hidden rounded-2xl border border-[#e8e9ec] bg-white transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#20242c]/[0.07]"
+                  >
+                    <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-[#f1f3f6] p-5">
+                      {sanPham.hinhAnh ? (
+                        <img
+                          src={sanPham.hinhAnh}
+                          alt={sanPham.tenSanPham}
+                          loading="lazy"
+                          className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <Smartphone
+                          className="size-16 text-[#b2b7c0]"
+                          strokeWidth={1}
+                        />
+                      )}
+                      <span
+                        className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-semibold ${sanPham.soLuongTon > 0 ? "bg-white text-[#4b7259]" : "bg-[#fff0ec] text-[#c74430]"}`}
+                      >
+                        {sanPham.soLuongTon > 0 ? "Còn hàng" : "Hết hàng"}
                       </span>
                     </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+                    <div className="p-4">
+                      <h3 className="min-h-12 font-semibold leading-6">
+                        {sanPham.tenSanPham}
+                      </h3>
+                      {/* <p className="mt-1 line-clamp-2 min-h-10 text-sm leading-5 text-[#777c85]">
+                      {sanPham.moTa || ""}
+                    </p> */}
+                      <div className="mt-4 flex items-center justify-between gap-2 border-t border-[#f0f1f3] pt-3">
+                        <span className="font-bold text-[#e94f37]">
+                          {formatCurrency(sanPham.giaBan)}
+                        </span>
+                        <span className="text-xs text-[#858a94]">
+                          Kho: {sanPham.soLuongTon ?? 0}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </Link>
           )}
         </section>
       </main>

@@ -9,6 +9,7 @@ import Register from "./components/Register.jsx";
 import { registerAction } from "./components/Register.jsx";
 import { loginAction } from "./components/Login.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
+import ProductDetail from "./components/ProductDetail.jsx";
 
 import {
   createBrowserRouter,
@@ -27,6 +28,7 @@ const routeDenfinitions = createRoutesFromElements(
       action={registerAction}
       errorElement={<ErrorPage />}
     />
+    <Route path="/chitietsanpham" element={<ProductDetail />} />
   </Route>,
 );
 
