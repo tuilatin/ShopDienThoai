@@ -1,8 +1,8 @@
 package com.shopdienthoaiAPI.service.impl;
 
 import com.shopdienthoaiAPI.dto.SanPhamDto;
+import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.repository.SanPhamRepository;
-import com.shopdienthoaiAPI.service.IDanhMucService;
 import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,4 +21,10 @@ public class SanPhamServiceImpl implements ISanPhamService {
                         (sp.getMaSanPham(), sp.getTenSanPham(),
                         sp.getGiaBan(), sp.getSoLuongTon(), sp.getHinhAnh(), sp.getMoTa())).toList();
     }
+
+    @Override
+    public SanPhamDto.Response findSanPhamByMaSanPham(String maSanPham) {
+        return sanPhamRepository.findSanPhamByMaSanPham((maSanPham));
+    }
+
 }

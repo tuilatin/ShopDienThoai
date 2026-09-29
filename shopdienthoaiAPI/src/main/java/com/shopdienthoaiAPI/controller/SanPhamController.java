@@ -5,6 +5,7 @@ import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,5 +21,10 @@ public class SanPhamController {
     @GetMapping
     public ResponseEntity<List<SanPhamDto.Response>> findAll() {
         return ResponseEntity.ok(sanPhamService.findAll());
+    }
+
+    @GetMapping("/chitietsanpham/{maSanPham}")
+    public SanPhamDto.Response findSanPhamByMaSanPham(@PathVariable String maSanPham) {
+        return sanPhamService.findSanPhamByMaSanPham(maSanPham);
     }
 }
