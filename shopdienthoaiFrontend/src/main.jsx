@@ -28,7 +28,7 @@ const routeDenfinitions = createRoutesFromElements(
       action={registerAction}
       errorElement={<ErrorPage />}
     />
-    <Route path="/chitietsanpham" element={<ProductDetail />} />
+    <Route path="/chitietsanpham/:maSanPham" element={<ProductDetail />} />
   </Route>,
 );
 
