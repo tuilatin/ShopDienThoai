@@ -37,11 +37,18 @@ export default function ProductDetail() {
         Quisquam, quod.
       </p>
 
-      <div className="flex flex-wrap items-center gap-2 md:flex-row">
-        <Button variant="outline">Button</Button>
-        <Button variant="outline" size="icon" aria-label="Submit">
-          <ArrowUpIcon />
-        </Button>
+      <div className="flex flex-wrap items-center justify-center gap-2 md:flex-row">
+        <button>-</button>
+        <input
+          type="number"
+          defaultValue="1"
+          min="1"
+          className="w-13 text-center"
+        />
+
+        <button>+</button>
+        <Button variant="outline">Thêm vào giỏ</Button>
+        <Button variant="outline">Mua ngay</Button>
       </div>
     </>
   );
