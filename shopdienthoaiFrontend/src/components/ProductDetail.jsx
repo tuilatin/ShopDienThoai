@@ -16,29 +16,30 @@ import { useParams } from "react-router-dom";
 export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const { maSanPham } = useParams();
+  const [sanPham, setSanPham] = useState(null);
   useEffect(() => {
     apiClient
       .get(`sanpham/chitietsanpham/${maSanPham}`)
-      .then((response) => console.log(response.data))
+      .then((response) => setSanPham(response.data))
       .catch((error) => console.error("Lỗi tải sản phẩm: ", error));
   }, [maSanPham]);
 
   return (
     <>
-      <Card className="relative mx-auto w-full max-w-sm pt-0">
+      <Card
+        className="relative mx-auto w-full max-w-sm pt-0"
+        key={sanPham?.maSanPham}
+      >
         <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
         <img
-          src="https://avatar.vercel.sh/shadcn1"
+          src={sanPham?.hinhAnh}
           alt="Event cover"
-          className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
+          className="relative z-20 aspect-video w-full object-cover  "
         />
         <CardHeader>
-          <CardAction>
-            <Badge variant="secondary">Featured</Badge>
-          </CardAction>
-          <CardTitle>Tên sản phẩm</CardTitle>
-          <p>Giá: 10.000.000 VND</p>
-          <p>Kho: 25</p>
+          <CardTitle>{sanPham?.tenSanPham}</CardTitle>
+          <p>Giá: {sanPham?.giaBan} VNĐ</p>
+          <p>Kho: {sanPham?.soLuongTon}</p>
         </CardHeader>
         {/* <CardFooter>
         <Button className="w-full">View Event</Button>
