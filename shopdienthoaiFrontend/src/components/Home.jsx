@@ -195,8 +195,8 @@ export async function DanhMucLoader() {
       credentials: "include",
     };
     const [danhMucRes, sanPhamRes] = await Promise.all([
-      fetch(`${baseUrl}/DanhMuc`, requestOptions),
-      fetch(`${baseUrl}/SanPham`, requestOptions),
+      fetch(`${baseUrl}/danhmuc`, requestOptions),
+      fetch(`${baseUrl}/sanpham`, requestOptions),
     ]);
 
     if (!danhMucRes.ok) {

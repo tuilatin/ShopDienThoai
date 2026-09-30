@@ -1,7 +1,8 @@
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ArrowUpIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import apiClient from "../api/apiClient";
 import {
   Card,
   CardAction,
@@ -10,9 +11,17 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { useParams } from "react-router-dom";
 
 export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
+  const { maSanPham } = useParams();
+  useEffect(() => {
+    apiClient
+      .get(`sanpham/chitietsanpham/${maSanPham}`)
+      .then((response) => console.log(response.data))
+      .catch((error) => console.error("Lỗi tải sản phẩm: ", error));
+  }, [maSanPham]);
 
   return (
     <>

@@ -11,7 +11,7 @@ import com.shopdienthoaiAPI.service.IDanhMucService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/DanhMuc")
+@RequestMapping("/api/v1/danhmuc")
 @RequiredArgsConstructor
 public class DanhMucController {
 
