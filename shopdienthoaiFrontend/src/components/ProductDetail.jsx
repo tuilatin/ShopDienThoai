@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { useParams } from "react-router-dom";
+import { getGuestCart, saveGuestCart } from "../lib/cartStorage";
 
 export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
@@ -74,9 +75,19 @@ export default function ProductDetail() {
         >
           +
         </button>
-        <Button variant="outline">Thêm vào giỏ</Button>
+        <Button variant="outline" onClick={handleAddToCart}>
+          Thêm vào giỏ
+        </Button>
         <Button variant="outline">Mua ngay</Button>
       </div>
     </>
+  );
+}
+
+function handleAddToCart() {
+  if (!sanPham) return;
+  const cart = getGuestCart();
+  const existingItem = cart.find(
+    (item) => item.maSanPham === sanPham.maSanPham,
   );
 }
