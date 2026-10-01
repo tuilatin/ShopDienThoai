@@ -25,6 +25,23 @@ export default function ProductDetail() {
       .catch((error) => console.error("Lỗi tải sản phẩm: ", error));
   }, [maSanPham]);
 
+  function handleAddToCart() {
+    if (!sanPham) return;
+    const cart = getGuestCart();
+    const existingItem = cart.find(
+      (item) => item.maSanPham === sanPham.maSanPham,
+    );
+
+    const updatedCart = existingItem
+      ? cart.map((item) =>
+          item.maSanPham === sanPham.maSanPham
+            ? { ...item, quantity: item.quantity + quantity }
+            : item,
+        )
+      : [...cart, { ...sanPham, quantity }];
+    saveGuestCart(updatedCart);
+  }
+
   return (
     <>
       <Card
@@ -81,13 +98,5 @@ export default function ProductDetail() {
         <Button variant="outline">Mua ngay</Button>
       </div>
     </>
-  );
-}
-
-function handleAddToCart() {
-  if (!sanPham) return;
-  const cart = getGuestCart();
-  const existingItem = cart.find(
-    (item) => item.maSanPham === sanPham.maSanPham,
   );
 }
