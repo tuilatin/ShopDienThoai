@@ -1,5 +1,18 @@
 import { ShoppingCart, Smartphone } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getGuestCart } from "../lib/cartStorage";
+{ getGuestCart, saveGuestCart } from "../lib/cartStorage";
+const [cartCount, setCartCount] = useState(() => getGuestCart().length);
+
+useEffect(() => {
+  function updateCartCount() {
+    setCartCount(getGuestCart().length);
+  }
+
+  window.addEventListener("guestCartUpdated", updateCartCount);
+  return () => window.removeEventListener("guestCartUpdated", updateCartCount);
+}, []);
 
 export default function Header() {
   return (

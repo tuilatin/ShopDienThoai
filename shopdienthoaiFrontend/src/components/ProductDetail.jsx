@@ -1,7 +1,7 @@
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ArrowUpIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import apiClient from "../api/apiClient";
 import {
   Card,
@@ -18,6 +18,7 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const { maSanPham } = useParams();
   const [sanPham, setSanPham] = useState(null);
+
   useEffect(() => {
     apiClient
       .get(`sanpham/chitietsanpham/${maSanPham}`)
