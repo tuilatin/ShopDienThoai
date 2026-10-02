@@ -2,19 +2,20 @@ import { ShoppingCart, Smartphone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getGuestCart } from "../lib/cartStorage";
-{ getGuestCart, saveGuestCart } from "../lib/cartStorage";
-const [cartCount, setCartCount] = useState(() => getGuestCart().length);
-
-useEffect(() => {
-  function updateCartCount() {
-    setCartCount(getGuestCart().length);
-  }
-
-  window.addEventListener("guestCartUpdated", updateCartCount);
-  return () => window.removeEventListener("guestCartUpdated", updateCartCount);
-}, []);
 
 export default function Header() {
+  const [cartCount, setCartCount] = useState(() => getGuestCart().length);
+
+  useEffect(() => {
+    function updateCartCount() {
+      setCartCount(getGuestCart().length);
+    }
+
+    window.addEventListener("guestCartUpdated", updateCartCount);
+    return () =>
+      window.removeEventListener("guestCartUpdated", updateCartCount);
+  }, []);
+
   return (
     <header className="border-b border-black/5 bg-white">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -48,12 +49,24 @@ export default function Header() {
             Đăng nhập
           </Link>
 
-          <a
+          {/* <a
             href="#san-pham"
             aria-label="Xem sản phẩm"
             className="grid size-10 place-items-center rounded-full text-[#343943] transition hover:bg-[#f2f3f5]"
           >
             <ShoppingCart size={30} />
+          </a> */}
+          <a
+            href="#san-pham"
+            aria-label={`Giỏ hàng, ${cartCount} loại sản phẩm`}
+            className="relative grid size-10 place-items-center rounded-full text-[#343943] transition hover:bg-[#f2f3f5]"
+          >
+            <ShoppingCart size={30} />
+            {cartCount > 0 && (
+              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[#e94f37] px-1 text-xs font-bold text-white">
+                {cartCount}
+              </span>
+            )}
           </a>
         </div>
       </div>
