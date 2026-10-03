@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Minus, Plus, Smartphone, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
-import { getGuestCart } from "../lib/cartStorage";
+import { getGuestCart, saveGuestCart } from "../lib/cartStorage";
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("vi-VN", {
@@ -17,23 +17,19 @@ export default function Cart() {
     0,
   );
 
-  function updateQuantity(maSanPham, quantity) {
-    const nextQuantity = Math.max(1, Number(quantity) || 1);
-    setItems((currentItems) =>
-      currentItems.map((item) =>
-        item.maSanPham === maSanPham
-          ? { ...item, quantity: nextQuantity }
-          : item,
-      ),
-    );
-  }
-
   function removeItem(maSanPham) {
-    setItems((currentItems) =>
-      currentItems.filter((item) => item.maSanPham !== maSanPham),
-    );
+    const updatedItems = items.filter((item) => item.maSanPham !== maSanPham);
+    setItems(updatedItems);
+    saveGuestCart(updatedItems);
   }
 
+  function updateQuantity(maSanPham, newQuantity) {
+    const updatedItems = items.map((item) =>
+      maSanPham === item.maSanPham ? { ...item, quantity: newQuantity } : item,
+    );
+    setItems(updatedItems);
+    saveGuestCart(updatedItems);
+  }
   return (
     <main className="min-h-[calc(100vh-72px)] bg-[#f7f8fa] px-4 py-8 text-[#17191d] sm:px-6 sm:py-12 lg:px-8">
       <div className="mx-auto max-w-5xl">
@@ -83,9 +79,9 @@ export default function Cart() {
                         type="button"
                         aria-label={`Giảm số lượng ${item.tenSanPham}`}
                         disabled={item.quantity <= 1}
-                        onClick={() =>
-                          updateQuantity(item.maSanPham, item.quantity - 1)
-                        }
+                        onClick={() => {
+                          item.quantity = item.quantity - 1;
+                        }}
                         className="grid size-9 place-items-center text-[#555b65] transition hover:bg-[#f1f2f4] disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         <Minus size={14} />
@@ -95,18 +91,15 @@ export default function Cart() {
                         min="1"
                         aria-label={`Số lượng ${item.tenSanPham}`}
                         value={item.quantity}
-                        onChange={(event) =>
-                          updateQuantity(item.maSanPham, event.target.value)
-                        }
                         className="h-full w-11 border-x border-[#e7e8eb] text-center text-sm outline-none"
                       />
                       <button
                         type="button"
                         aria-label={`Tăng số lượng ${item.tenSanPham}`}
-                        onClick={() =>
-                          updateQuantity(item.maSanPham, item.quantity + 1)
-                        }
                         className="grid size-9 place-items-center text-[#555b65] transition hover:bg-[#f1f2f4]"
+                        onClick={() => {
+                          item.quantity = item.quantity + 1;
+                        }}
                       >
                         <Plus size={14} />
                       </button>
@@ -125,7 +118,9 @@ export default function Cart() {
                   <button
                     type="button"
                     aria-label={`Xóa ${item.tenSanPham} khỏi giỏ hàng`}
-                    onClick={() => removeItem(item.maSanPham)}
+                    onClick={() => {
+                      removeItem(item.maSanPham);
+                    }}
                     className="grid size-9 place-items-center text-[#858a94] transition hover:bg-[#fff0ec] hover:text-[#c74430]"
                   >
                     <Trash2 size={17} />
