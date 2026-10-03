@@ -6,4 +6,5 @@ export function getGuestCart() {
 
 export function saveGuestCart(cart) {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  window.dispatchEvent(new Event("guestCartUpdated"));
 }

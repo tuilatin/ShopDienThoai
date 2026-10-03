@@ -56,8 +56,8 @@ export default function Header() {
           >
             <ShoppingCart size={30} />
           </a> */}
-          <a
-            href="#san-pham"
+          <Link
+            to="/cart"
             aria-label={`Giỏ hàng, ${cartCount} loại sản phẩm`}
             className="relative grid size-10 place-items-center rounded-full text-[#343943] transition hover:bg-[#f2f3f5]"
           >
@@ -71,7 +71,7 @@ export default function Header() {
                 {cartCount}
               </span>
             )}
-          </a>
+          </Link>
         </div>
       </div>
     </header>

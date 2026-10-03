@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { DanhMucLoader } from "./components/Home.jsx";
 import Home from "./components/Home.jsx";
+import Cart from "./components/Cart.jsx";
 import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import { registerAction } from "./components/Register.jsx";
@@ -28,6 +29,7 @@ const routeDenfinitions = createRoutesFromElements(
       action={registerAction}
       errorElement={<ErrorPage />}
     />
+    <Route path="/cart" element={<Cart />} />
     <Route path="/chitietsanpham/:maSanPham" element={<ProductDetail />} />
   </Route>,
 );
