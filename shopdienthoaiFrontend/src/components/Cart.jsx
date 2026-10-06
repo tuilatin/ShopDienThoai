@@ -13,7 +13,7 @@ const formatCurrency = (value) =>
 export default function Cart() {
   const [items, setItems] = useState(getGuestCart());
   const total = items.reduce(
-    (sum, item) => sum + item.donGia * item.quantity,
+    (sum, item) => sum + item.giaBan * item.quantity,
     0,
   );
 
