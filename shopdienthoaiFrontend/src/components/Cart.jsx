@@ -80,7 +80,19 @@ export default function Cart() {
                         aria-label={`Giảm số lượng ${item.tenSanPham}`}
                         disabled={item.quantity <= 1}
                         onClick={() => {
-                          item.quantity = item.quantity - 1;
+                          setItems((prevItems) =>
+                            prevItems.map((prevItem) =>
+                              prevItem.maSanPham === item.maSanPham
+                                ? {
+                                    ...prevItem,
+                                    quantity: Math.max(
+                                      1,
+                                      prevItem.quantity - 1,
+                                    ),
+                                  }
+                                : prevItem,
+                            ),
+                          );
                         }}
                         className="grid size-9 place-items-center text-[#555b65] transition hover:bg-[#f1f2f4] disabled:cursor-not-allowed disabled:opacity-40"
                       >
@@ -98,7 +110,16 @@ export default function Cart() {
                         aria-label={`Tăng số lượng ${item.tenSanPham}`}
                         className="grid size-9 place-items-center text-[#555b65] transition hover:bg-[#f1f2f4]"
                         onClick={() => {
-                          item.quantity = item.quantity + 1;
+                          setItems((prevItems) =>
+                            prevItems.map((prevItem) =>
+                              prevItem.maSanPham === item.maSanPham
+                                ? {
+                                    ...prevItem,
+                                    quantity: prevItem.quantity + 1,
+                                  }
+                                : prevItem,
+                            ),
+                          );
                         }}
                       >
                         <Plus size={14} />
