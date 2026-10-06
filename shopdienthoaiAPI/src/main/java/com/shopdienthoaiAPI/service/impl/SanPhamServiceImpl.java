@@ -27,4 +27,10 @@ public class SanPhamServiceImpl implements ISanPhamService {
         return sanPhamRepository.findSanPhamByMaSanPham((maSanPham));
     }
 
+    @Override
+    public void themSampham(SanPham sanPham) {
+        sanPhamRepository.save(sanPham);
+    }
+
+
 }

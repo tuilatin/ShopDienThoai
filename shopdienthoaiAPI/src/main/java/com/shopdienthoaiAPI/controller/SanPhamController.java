@@ -1,13 +1,11 @@
 package com.shopdienthoaiAPI.controller;
 
 import com.shopdienthoaiAPI.dto.SanPhamDto;
+import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +24,10 @@ public class SanPhamController {
     @GetMapping("/chitietsanpham/{maSanPham}")
     public SanPhamDto.Response findSanPhamByMaSanPham(@PathVariable String maSanPham) {
         return sanPhamService.findSanPhamByMaSanPham(maSanPham);
+    }
+
+    @PostMapping("/themsampham")
+    public void findThemSampham(@RequestBody SanPham sanPham) {
+         sanPhamService.themSampham(sanPham);
     }
 }
