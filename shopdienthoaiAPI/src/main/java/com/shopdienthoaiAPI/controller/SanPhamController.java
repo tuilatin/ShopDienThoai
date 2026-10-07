@@ -1,7 +1,6 @@
 package com.shopdienthoaiAPI.controller;
 
 import com.shopdienthoaiAPI.dto.SanPhamDto;
-import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,9 @@ public class SanPhamController {
     }
 
     @PostMapping("/themsampham")
-    public void findThemSampham(@RequestBody SanPham sanPham) {
-         sanPhamService.themSampham(sanPham);
+    public void themSampham(@RequestBody SanPhamDto.Request sanPhamDto) {
+         sanPhamService.themSampham(sanPhamDto);
     }
+
+    @PutMapping(/suasam)
 }

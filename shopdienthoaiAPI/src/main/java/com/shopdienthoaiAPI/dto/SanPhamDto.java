@@ -17,7 +17,7 @@ import java.time.Instant;
  */
 @Value
 public class SanPhamDto{
-    public record Request(String tenSanPham, BigDecimal giaBan,
+    public record Request(String tenSanPham,String maDanhMuc,  BigDecimal giaBan,
                            Integer soLuongTon, String moTa, Instant ngayTao) {}
 
     // Trả dữ liệu về cho Client / React

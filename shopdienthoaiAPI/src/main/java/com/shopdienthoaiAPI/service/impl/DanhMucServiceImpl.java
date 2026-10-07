@@ -4,7 +4,6 @@ import com.shopdienthoaiAPI.dto.DanhMucDto;
 import com.shopdienthoaiAPI.repository.DanhMucRepository;
 import com.shopdienthoaiAPI.service.IDanhMucService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

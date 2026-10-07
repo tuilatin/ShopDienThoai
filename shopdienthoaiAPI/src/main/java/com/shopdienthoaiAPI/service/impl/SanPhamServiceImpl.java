@@ -1,12 +1,14 @@
 package com.shopdienthoaiAPI.service.impl;
 
 import com.shopdienthoaiAPI.dto.SanPhamDto;
+import com.shopdienthoaiAPI.entity.DanhMuc;
 import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.repository.SanPhamRepository;
 import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -27,8 +29,27 @@ public class SanPhamServiceImpl implements ISanPhamService {
         return sanPhamRepository.findSanPhamByMaSanPham((maSanPham));
     }
 
+    public String taoMaSanPham() {
+        return sanPhamRepository.findTopByOrderByMaSanPhamDesc().map(
+                sanPham -> {
+                    String maSanPhamHienTai = sanPham.getMaSanPham();
+                    int maSo = Integer.parseInt(maSanPhamHienTai.substring(2));
+                    return String.format("SP%03d", maSo + 1);
+                }).orElse("SP001");
+    }
+
     @Override
-    public void themSampham(SanPham sanPham) {
+    public void themSampham(SanPhamDto.Request sanPhamDto) {
+        DanhMuc danhMuc = new DanhMuc();
+        danhMuc.setMaDanhMuc(sanPhamDto.maDanhMuc());
+        SanPham sanPham = new SanPham();
+        sanPham.setMaSanPham (taoMaSanPham());
+        sanPham.setTenSanPham (sanPhamDto.tenSanPham());
+        sanPham.setDanhMuc(danhMuc);
+        sanPham.setGiaBan (sanPhamDto.giaBan());
+        sanPham.setSoLuongTon(sanPhamDto.soLuongTon());
+        sanPham.setMoTa (sanPhamDto.moTa());
+        sanPham.setNgayTao (Instant.now());
         sanPhamRepository.save(sanPham);
     }
 
