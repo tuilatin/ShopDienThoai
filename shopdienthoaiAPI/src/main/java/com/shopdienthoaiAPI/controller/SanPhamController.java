@@ -27,8 +27,11 @@ public class SanPhamController {
 
     @PostMapping("/themsampham")
     public void themSampham(@RequestBody SanPhamDto.Request sanPhamDto) {
-         sanPhamService.themSampham(sanPhamDto);
+        sanPhamService.themSampham(sanPhamDto);
     }
 
-    @PutMapping(/suasam)
+    @PutMapping("/suasanpham/{maSanPham}")
+    public void suaSanPham(@RequestBody SanPhamDto.Request sanPhamDto) {
+        sanPhamService.suaSanPham(sanPhamDto);
+    }
 }
