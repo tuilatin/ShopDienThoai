@@ -20,8 +20,8 @@ public class SanPhamServiceImpl implements ISanPhamService {
     public List<SanPhamDto.Response> findAll() {
         return sanPhamRepository.findAll().stream()
                 .map(sp -> new SanPhamDto.Response
-                        (sp.getMaSanPham(), sp.getTenSanPham(),
-                        sp.getGiaBan(), sp.getSoLuongTon(), sp.getHinhAnh(), sp.getMoTa())).toList();
+                        (sp.getMaSanPham(), sp.getTenSanPham(), sp.getDanhMuc().getMaDanhMuc(),
+                        sp.getGiaBan(), sp.getSoLuongTon(), sp.getHinhAnh(), sp.getMoTa(), sp.getNgayTao())).toList();
     }
 
     @Override

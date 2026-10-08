@@ -17,12 +17,12 @@ import java.time.Instant;
  */
 @Value
 public class SanPhamDto{
-    public record Request(String tenSanPham,String maDanhMuc,  BigDecimal giaBan,
+    public record Request(String maSanPham, String tenSanPham,String maDanhMuc,  BigDecimal giaBan,
                            Integer soLuongTon, String moTa, Instant ngayTao) {}
 
     // Trả dữ liệu về cho Client / React
     public record Response(
-            String maSanPham, String tenSanPham, BigDecimal giaBan,
-            Integer soLuongTon, String hinhAnh, String moTa
+            String maSanPham, String tenSanPham, String maDanhMuc, BigDecimal giaBan,
+            Integer soLuongTon, String hinhAnh, String moTa, Instant ngayTao
     ) {}
 }

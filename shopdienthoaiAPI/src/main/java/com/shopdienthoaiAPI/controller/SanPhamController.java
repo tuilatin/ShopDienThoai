@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -30,8 +32,15 @@ public class SanPhamController {
         sanPhamService.themSampham(sanPhamDto);
     }
 
-    @PutMapping("/suasanpham/{maSanPham}")
-    public void suaSanPham(@RequestBody SanPhamDto.Request sanPhamDto) {
-        sanPhamService.suaSanPham(sanPhamDto);
+    @PutMapping("/chitietsanpham/{maSanPham}")
+    public void suaSanPham(@PathVariable String maSanPham, @RequestBody SanPhamDto.Request sanPhamDto) {
+        SanPhamDto.Response sanPhamResponse =  sanPhamService.findSanPhamByMaSanPham(maSanPham);
+        SanPhamDto.Request sanPhamRequest =
+                new SanPhamDto.Request(maSanPham,  sanPhamResponse.tenSanPham(), sanPhamResponse.maDanhMuc(),
+                        sanPhamResponse.giaBan(), sanPhamResponse.soLuongTon(), sanPhamResponse.moTa(), sanPhamResponse.ngayTao());
+        sanPhamService.suaSanPham(sanPhamRequest);
     }
 }
+
+//user ở trang detail/sp001 user gửi put kèm requestbody
+//trước tiên get sản phẩm
