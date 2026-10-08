@@ -1,6 +1,7 @@
 package com.shopdienthoaiAPI.controller;
 
 import com.shopdienthoaiAPI.dto.SanPhamDto;
+import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +34,18 @@ public class SanPhamController {
     }
 
     @PutMapping("/chitietsanpham/{maSanPham}")
-    public void suaSanPham(@PathVariable String maSanPham, @RequestBody SanPhamDto.Request sanPhamDto) {
-        SanPhamDto.Response sanPhamResponse =  sanPhamService.findSanPhamByMaSanPham(maSanPham);
-        SanPhamDto.Request sanPhamRequest =
-                new SanPhamDto.Request(maSanPham,  sanPhamResponse.tenSanPham(), sanPhamResponse.maDanhMuc(),
-                        sanPhamResponse.giaBan(), sanPhamResponse.soLuongTon(), sanPhamResponse.moTa(), sanPhamResponse.ngayTao());
-        sanPhamService.suaSanPham(sanPhamRequest);
+    public ResponseEntity<Void> suaSanPham(@PathVariable String maSanPham, @RequestBody SanPhamDto.Request sanPhamDto) {
+        sanPhamService.suaSanPham(new SanPhamDto.Request(
+                maSanPham,
+                sanPhamDto.tenSanPham(),
+                sanPhamDto.maDanhMuc(),
+                sanPhamDto.giaBan(),
+                sanPhamDto.soLuongTon(),
+                sanPhamDto.moTa(),
+                sanPhamDto.ngayTao()
+        )
+        );
+        return ResponseEntity.ok().build();
     }
 }
 

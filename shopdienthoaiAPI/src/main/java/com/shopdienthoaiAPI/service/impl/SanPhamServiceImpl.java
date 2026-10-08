@@ -3,6 +3,7 @@ package com.shopdienthoaiAPI.service.impl;
 import com.shopdienthoaiAPI.dto.SanPhamDto;
 import com.shopdienthoaiAPI.entity.DanhMuc;
 import com.shopdienthoaiAPI.entity.SanPham;
+import com.shopdienthoaiAPI.repository.DanhMucRepository;
 import com.shopdienthoaiAPI.repository.SanPhamRepository;
 import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SanPhamServiceImpl implements ISanPhamService {
     private final SanPhamRepository sanPhamRepository;
+    private final DanhMucRepository danhMucRepository;
 
     @Override
     public List<SanPhamDto.Response> findAll() {
@@ -55,10 +57,9 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Override
     public void suaSanPham(SanPhamDto.Request sanPhamDto) {
-        DanhMuc danhMuc = new DanhMuc();
-        danhMuc.setMaDanhMuc(sanPhamDto.maDanhMuc());
-        SanPham sanPham = new SanPham();
-        sanPham.setMaSanPham (taoMaSanPham());
+        DanhMuc danhMuc = danhMucRepository.findDanhMucsByMaDanhMuc((sanPhamDto.maDanhMuc()));
+        SanPham sanPham = sanPhamRepository.findSanPhamsByMaSanPham(sanPhamDto.maSanPham());
+        sanPham.setMaSanPham (sanPhamDto.maSanPham());
         sanPham.setTenSanPham (sanPhamDto.tenSanPham());
         sanPham.setDanhMuc(danhMuc);
         sanPham.setGiaBan (sanPhamDto.giaBan());
