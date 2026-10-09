@@ -23,12 +23,13 @@ public class SanPhamController {
         return ResponseEntity.ok(sanPhamService.findAll());
     }
 
-    @GetMapping("/{maSanPham}")
+
+   @GetMapping("/{maSanPham}")
     public SanPhamDto.Response findSanPhamByMaSanPham(@PathVariable String maSanPham) {
         return sanPhamService.findSanPhamByMaSanPham(maSanPham);
     }
 
-    @PostMapping("/themsampham")
+    @PostMapping
     public void themSampham(@RequestBody SanPhamDto.Request sanPhamDto) {
         sanPhamService.themSampham(sanPhamDto);
     }

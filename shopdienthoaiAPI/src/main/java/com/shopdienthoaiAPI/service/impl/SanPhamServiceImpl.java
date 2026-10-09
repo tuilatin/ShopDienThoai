@@ -7,7 +7,9 @@ import com.shopdienthoaiAPI.repository.DanhMucRepository;
 import com.shopdienthoaiAPI.repository.SanPhamRepository;
 import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -28,7 +30,19 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Override
     public SanPhamDto.Response findSanPhamByMaSanPham(String maSanPham) {
-        return sanPhamRepository.findSanPhamByMaSanPham((maSanPham));
+        SanPham sp = sanPhamRepository.findByMaSanPham(maSanPham)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Không tìm thấy sản phẩm"));
+        return new SanPhamDto.Response(
+                sp.getMaSanPham(),
+                sp.getTenSanPham(),
+                sp.getDanhMuc().getMaDanhMuc(),
+                sp.getGiaBan(),
+                sp.getSoLuongTon(),
+                sp.getHinhAnh(),
+                sp.getMoTa(),
+                sp.getNgayTao()
+        );
     }
 
     public String taoMaSanPham() {
