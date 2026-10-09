@@ -70,10 +70,10 @@ public class SanPhamServiceImpl implements ISanPhamService {
     }
 
     @Override
-    public void suaSanPham(SanPhamDto.Request sanPhamDto) {
+    public void suaSanPham(String maSanPham,SanPhamDto.Request sanPhamDto) {
         DanhMuc danhMuc = danhMucRepository.findDanhMucsByMaDanhMuc((sanPhamDto.maDanhMuc()));
-        SanPham sanPham = sanPhamRepository.findSanPhamsByMaSanPham(sanPhamDto.maSanPham());
-        sanPham.setMaSanPham (sanPhamDto.maSanPham());
+        SanPham sanPham = sanPhamRepository.findSanPhamsByMaSanPham(maSanPham);
+        sanPham.setMaSanPham (maSanPham);
         sanPham.setTenSanPham (sanPhamDto.tenSanPham());
         sanPham.setDanhMuc(danhMuc);
         sanPham.setGiaBan (sanPhamDto.giaBan());

@@ -36,8 +36,7 @@ public class SanPhamController {
 
     @PutMapping("/{maSanPham}")
     public ResponseEntity<Void> suaSanPham(@PathVariable String maSanPham, @RequestBody SanPhamDto.Request sanPhamDto) {
-        sanPhamService.suaSanPham(new SanPhamDto.Request(
-                maSanPham,
+        sanPhamService.suaSanPham( maSanPham, new SanPhamDto.Request(
                 sanPhamDto.tenSanPham(),
                 sanPhamDto.maDanhMuc(),
                 sanPhamDto.giaBan(),
