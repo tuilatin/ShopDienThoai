@@ -11,4 +11,5 @@ public interface ISanPhamService {
   SanPhamDto.Response findSanPhamByMaSanPham(@Size(max = 5) String maSanPham);
   void themSampham(SanPhamDto.Request sanPhamDto);
   void suaSanPham(SanPhamDto.Request sanPhamDto);
+  void xoaSanPham(String maSanPham);
 }

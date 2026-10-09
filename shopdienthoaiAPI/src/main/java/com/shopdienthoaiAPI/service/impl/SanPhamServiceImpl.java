@@ -69,5 +69,11 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPhamRepository.save(sanPham);
     }
 
+    @Override
+    public void xoaSanPham(String maSanPham) {
+        SanPham sanPham = sanPhamRepository.findSanPhamsByMaSanPham(maSanPham);
+        sanPhamRepository.delete(sanPham);
+    }
+
 
 }

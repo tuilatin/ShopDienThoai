@@ -23,7 +23,7 @@ public class SanPhamController {
         return ResponseEntity.ok(sanPhamService.findAll());
     }
 
-    @GetMapping("/chitietsanpham/{maSanPham}")
+    @GetMapping("/{maSanPham}")
     public SanPhamDto.Response findSanPhamByMaSanPham(@PathVariable String maSanPham) {
         return sanPhamService.findSanPhamByMaSanPham(maSanPham);
     }
@@ -33,7 +33,7 @@ public class SanPhamController {
         sanPhamService.themSampham(sanPhamDto);
     }
 
-    @PutMapping("/chitietsanpham/{maSanPham}")
+    @PutMapping("/{maSanPham}")
     public ResponseEntity<Void> suaSanPham(@PathVariable String maSanPham, @RequestBody SanPhamDto.Request sanPhamDto) {
         sanPhamService.suaSanPham(new SanPhamDto.Request(
                 maSanPham,
@@ -46,6 +46,12 @@ public class SanPhamController {
         )
         );
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{maSanPham}")
+    public ResponseEntity<Void> delete(@PathVariable String maSanPham) {
+        sanPhamService.xoaSanPham(maSanPham);
+        return ResponseEntity.noContent().build();
     }
 }
 
