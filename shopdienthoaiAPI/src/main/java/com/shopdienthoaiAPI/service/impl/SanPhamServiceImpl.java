@@ -70,7 +70,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
     }
 
     @Override
-    public void suaSanPham(String maSanPham,SanPhamDto.Request sanPhamDto) {
+    public SanPhamDto.Response suaSanPham(String maSanPham,SanPhamDto.Request sanPhamDto) {
         DanhMuc danhMuc = danhMucRepository.findDanhMucsByMaDanhMuc((sanPhamDto.maDanhMuc()));
         SanPham sanPham = sanPhamRepository.findSanPhamsByMaSanPham(maSanPham);
         sanPham.setMaSanPham (maSanPham);
@@ -79,8 +79,17 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPham.setGiaBan (sanPhamDto.giaBan());
         sanPham.setSoLuongTon(sanPhamDto.soLuongTon());
         sanPham.setMoTa (sanPhamDto.moTa());
-        sanPham.setNgayTao (Instant.now());
-        sanPhamRepository.save(sanPham);
+        SanPham sanPhamDaLuu = sanPhamRepository.save(sanPham);
+        return new SanPhamDto.Response(
+                sanPhamDaLuu.getMaSanPham(),
+                sanPhamDaLuu.getTenSanPham(),
+                sanPhamDaLuu.getDanhMuc().getMaDanhMuc(),
+                sanPhamDaLuu.getGiaBan(),
+                sanPhamDaLuu.getSoLuongTon(),
+                sanPhamDaLuu.getHinhAnh(),
+                sanPhamDaLuu.getMoTa(),
+                sanPhamDaLuu.getNgayTao()
+        );
     }
 
     @Override

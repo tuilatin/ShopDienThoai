@@ -10,6 +10,6 @@ public interface ISanPhamService {
   List<SanPhamDto.Response> findAll();
   SanPhamDto.Response findSanPhamByMaSanPham(@Size(max = 5) String maSanPham);
   void themSampham(SanPhamDto.Request sanPhamDto);
-  void suaSanPham(String maSanPham, SanPhamDto.Request sanPhamDto);
+  SanPhamDto.Response suaSanPham(String maSanPham, SanPhamDto.Request sanPhamDto);
   void xoaSanPham(String maSanPham);
 }

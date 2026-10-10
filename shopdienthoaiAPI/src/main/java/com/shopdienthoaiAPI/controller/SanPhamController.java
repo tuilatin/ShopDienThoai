@@ -35,17 +35,9 @@ public class SanPhamController {
     }
 
     @PutMapping("/{maSanPham}")
-    public ResponseEntity<Void> suaSanPham(@PathVariable String maSanPham, @RequestBody SanPhamDto.Request sanPhamDto) {
-        sanPhamService.suaSanPham( maSanPham, new SanPhamDto.Request(
-                sanPhamDto.tenSanPham(),
-                sanPhamDto.maDanhMuc(),
-                sanPhamDto.giaBan(),
-                sanPhamDto.soLuongTon(),
-                sanPhamDto.moTa(),
-                sanPhamDto.ngayTao()
-        )
-        );
-        return ResponseEntity.ok().build();
+    public ResponseEntity<SanPhamDto.Response> suaSanPham(@PathVariable String maSanPham, @RequestBody SanPhamDto.Request sanPhamDto) {
+        SanPhamDto.Response data = sanPhamService.suaSanPham( maSanPham, sanPhamDto);
+        return ResponseEntity.ok(data);
     }
 
     @DeleteMapping("/{maSanPham}")
