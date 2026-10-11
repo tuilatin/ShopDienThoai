@@ -45,6 +45,11 @@ public class SanPhamController {
         sanPhamService.xoaSanPham(maSanPham);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/timkiem")
+    public ResponseEntity<List<SanPhamDto.Response>> timTheoTenSanPham(@RequestParam String tenSanPham) {
+        return ResponseEntity.ok(sanPhamService.timKiemSanPhamTheoTen(tenSanPham));
+    }
 }
 
 //user ở trang detail/sp001 user gửi put kèm requestbody

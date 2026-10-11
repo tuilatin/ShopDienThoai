@@ -98,5 +98,35 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPhamRepository.delete(sanPham);
     }
 
+    @Override
+    public List<SanPhamDto.Response> timKiemSanPhamTheoTen(String tenSanPham) {
+        List<SanPham> sanPhams = sanPhamRepository.findSanPhamsByTenSanPhamContains((tenSanPham));
+        return sanPhams.stream().map(sp -> new SanPhamDto.Response(
+                sp.getMaSanPham(),
+                sp.getTenSanPham(),
+                sp.getDanhMuc().getMaDanhMuc(),
+                sp.getGiaBan(),
+                sp.getSoLuongTon(),
+                sp.getHinhAnh(),
+                sp.getMoTa(),
+                sp.getNgayTao()
+                )).toList();
+    }
+
+    @Override
+    public List<SanPhamDto.Response> locTheoDanhMucSanPham(String maDanhMuc) {
+        List<SanPham> sanPhams = sanPhamRepository.findSanPhamsByDanhMuc_MaDanhMuc(maDanhMuc);
+        return sanPhams.stream().map(sp -> new SanPhamDto.Response(
+                sp.getMaSanPham(),
+                sp.getTenSanPham(),
+                sp.getDanhMuc().getMaDanhMuc(),
+                sp.getGiaBan(),
+                sp.getSoLuongTon(),
+                sp.getHinhAnh(),
+                sp.getMoTa(),
+                sp.getNgayTao()
+        )).toList();
+    }
+
 
 }

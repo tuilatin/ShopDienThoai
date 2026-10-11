@@ -12,4 +12,6 @@ public interface ISanPhamService {
   void themSampham(SanPhamDto.Request sanPhamDto);
   SanPhamDto.Response suaSanPham(String maSanPham, SanPhamDto.Request sanPhamDto);
   void xoaSanPham(String maSanPham);
+  List<SanPhamDto.Response> timKiemSanPhamTheoTen(@Size(max = 5) String maSanPham);
+  List<SanPhamDto.Response> locTheoDanhMucSanPham(String danhMuc);
 }

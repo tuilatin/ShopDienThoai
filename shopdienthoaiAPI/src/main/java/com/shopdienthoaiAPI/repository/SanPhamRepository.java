@@ -2,9 +2,11 @@ package com.shopdienthoaiAPI.repository;
 
 import com.shopdienthoaiAPI.dto.SanPhamDto;
 import com.shopdienthoaiAPI.entity.SanPham;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SanPhamRepository extends JpaRepository<SanPham, String> {
@@ -12,4 +14,10 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
     Optional<SanPham> findTopByOrderByMaSanPhamDesc();
     Optional<SanPham> findByMaSanPham(String maSanPham);
     SanPham findSanPhamsByMaSanPham(@Size(max = 5) String maSanPham);
+
+    List<SanPham> findSanPhamsByTenSanPham(@Size(max = 150) @NotNull String tenSanPham);
+
+    List<SanPham> findSanPhamsByTenSanPhamContains(@Size(max = 150) @NotNull String tenSanPham);
+
+    List<SanPham> findSanPhamsByDanhMuc_MaDanhMuc(@Size(max = 5) String danhMucMaDanhMuc);
 }
