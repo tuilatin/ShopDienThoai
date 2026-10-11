@@ -55,6 +55,11 @@ public class SanPhamController {
     public ResponseEntity<List<SanPhamDto.Response>> locTheoDanhMucSanPham(@RequestParam(required = false) String maDanhMuc) {
         return ResponseEntity.ok(sanPhamService.locTheoDanhMucSanPham(maDanhMuc));
     }
+
+    @GetMapping(value = "/timkiem", params = "maDanhMuc")
+    public ResponseEntity<List<SanPhamDto.Response>> phanTrang(@RequestParam(required = false) String maDanhMuc) {
+        return ResponseEntity.ok(sanPhamService.locTheoDanhMucSanPham(maDanhMuc));
+    }
 }
 
 //user ở trang detail/sp001 user gửi put kèm requestbody
