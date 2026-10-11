@@ -46,9 +46,14 @@ public class SanPhamController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/timkiem")
-    public ResponseEntity<List<SanPhamDto.Response>> timTheoTenSanPham(@RequestParam String tenSanPham) {
+    @GetMapping(value = "/timkiem", params = "tenSanPham")
+    public ResponseEntity<List<SanPhamDto.Response>> timTheoTenSanPham(@RequestParam(required = false) String tenSanPham) {
         return ResponseEntity.ok(sanPhamService.timKiemSanPhamTheoTen(tenSanPham));
+    }
+
+    @GetMapping(value = "/timkiem", params = "maDanhMuc")
+    public ResponseEntity<List<SanPhamDto.Response>> locTheoDanhMucSanPham(@RequestParam(required = false) String maDanhMuc) {
+        return ResponseEntity.ok(sanPhamService.locTheoDanhMucSanPham(maDanhMuc));
     }
 }
 
