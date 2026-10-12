@@ -22,11 +22,54 @@ public class SanPhamController {
 
     private final ISanPhamService sanPhamService;
 
+//    @GetMapping
+//    public ResponseEntity<List<SanPhamDto.Response>> findAll() {
+//        return ResponseEntity.ok(sanPhamService.findAll());
+//    }
+
     @GetMapping
-    public ResponseEntity<List<SanPhamDto.Response>> findAll() {
-        return ResponseEntity.ok(sanPhamService.findAll());
+    public ResponseEntity<Page<SanPhamDto.Response>> findAll(
+            @RequestParam(required = false) String maDanhMuc,
+            @RequestParam(required = false) String tenSanPham,
+            @PageableDefault(
+                    page = 0,
+                    size = 3
+            ) Pageable pageable
+            ) {
+        if (maDanhMuc == null && tenSanPham == null) {
+            return ResponseEntity.ok(sanPhamService.phanTrang(pageable));
+        }
+        if(maDanhMuc != null && tenSanPham == null) {
+            return ResponseEntity.ok(sanPhamService.locTheoDanhMucSanPham(maDanhMuc));
+        }
+
+        if(maDanhMuc == null && tenSanPham != null) {
+            return ResponseEntity.ok(sanPhamService.timKiemSanPhamTheoTen(tenSanPham));
+        }
+
+        Page<SanPhamDto.Response> sanPhams = sanPhamService.locTheoDanhMucSanPham(maDanhMuc);
+
+
+
     }
 
+    @GetMapping(value = "/timkiem", params = "tenSanPham")
+    public ResponseEntity<Page<SanPhamDto.Response>> timTheoTenSanPham(@RequestParam(required = false) String tenSanPham) {
+        return ResponseEntity.ok(sanPhamService.timKiemSanPhamTheoTen(tenSanPham));
+    }
+
+    @GetMapping(value = "/timkiem", params = "maDanhMuc")
+    public ResponseEntity<Page<SanPhamDto.Response>> locTheoDanhMucSanPham(@RequestParam(required = false) String maDanhMuc) {
+        return ResponseEntity.ok(sanPhamService.locTheoDanhMucSanPham(maDanhMuc));
+    }
+
+    @GetMapping("/phanTrang")
+    public Page<SanPhamDto.Response> phanTrang(@PageableDefault(
+            page = 0,
+            size = 3
+    ) Pageable pageable) {
+        return sanPhamService.phanTrang(pageable);
+    }
 
    @GetMapping("/{maSanPham}")
     public SanPhamDto.Response findSanPhamByMaSanPham(@PathVariable String maSanPham) {
@@ -50,23 +93,6 @@ public class SanPhamController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/timkiem", params = "tenSanPham")
-    public ResponseEntity<List<SanPhamDto.Response>> timTheoTenSanPham(@RequestParam(required = false) String tenSanPham) {
-        return ResponseEntity.ok(sanPhamService.timKiemSanPhamTheoTen(tenSanPham));
-    }
-
-    @GetMapping(value = "/timkiem", params = "maDanhMuc")
-    public ResponseEntity<List<SanPhamDto.Response>> locTheoDanhMucSanPham(@RequestParam(required = false) String maDanhMuc) {
-        return ResponseEntity.ok(sanPhamService.locTheoDanhMucSanPham(maDanhMuc));
-    }
-
-    @GetMapping("/phanTrang")
-    public Page<SanPhamDto.Response> phanTrang(@PageableDefault(
-            page = 0,
-            size = 3
-    ) Pageable pageable) {
-        return sanPhamService.phanTrang(pageable);
-    }
 }
 
 //user ở trang detail/sp001 user gửi put kèm requestbody
