@@ -7,6 +7,8 @@ import com.shopdienthoaiAPI.repository.DanhMucRepository;
 import com.shopdienthoaiAPI.repository.SanPhamRepository;
 import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -126,6 +128,22 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 sp.getMoTa(),
                 sp.getNgayTao()
         )).toList();
+    }
+
+    @Override
+    public Page<SanPhamDto.Response> phanTrang(Pageable pageable) {
+        Page<SanPham> sanPhams =  sanPhamRepository.findAll(pageable);
+
+        return sanPhams.map(sp -> new SanPhamDto.Response(
+                sp.getMaSanPham(),
+                sp.getTenSanPham(),
+                sp.getDanhMuc().getMaDanhMuc(),
+                sp.getGiaBan(),
+                sp.getSoLuongTon(),
+                sp.getHinhAnh(),
+                sp.getMoTa(),
+                sp.getNgayTao()
+        ));
     }
 
 
