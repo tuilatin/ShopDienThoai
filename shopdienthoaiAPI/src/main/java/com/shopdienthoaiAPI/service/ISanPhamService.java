@@ -15,9 +15,6 @@ public interface ISanPhamService {
   void themSampham(SanPhamDto.Request sanPhamDto);
   SanPhamDto.Response suaSanPham(String maSanPham, SanPhamDto.Request sanPhamDto);
   void xoaSanPham(String maSanPham);
-  Page<SanPhamDto.Response> timKiemSanPhamTheoTen(@Size(max = 5) String maSanPham);
-  Page<SanPhamDto.Response> locTheoDanhMucSanPham(String danhMuc);
-  Page<SanPhamDto.Response> phanTrang(Pageable pageable);
   Page<SanPhamDto.Response> timKiemVaLoc(@Param("maDanhMuc") String maDanhMuc,
                              @Param("tenSanPham") String tenSanPham,
                              Pageable pageable);
