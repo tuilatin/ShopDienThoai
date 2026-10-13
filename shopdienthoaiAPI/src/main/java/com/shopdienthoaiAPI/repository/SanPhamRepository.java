@@ -24,9 +24,11 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
     List<SanPham> findSanPhamsByTenSanPhamContains(@Size(max = 150) @NotNull String tenSanPham);
 
     @Query("""
-        
+        select sp from SanPham sp
+            where (:maDanhMuc is null or sp.danhMuc.maDanhMuc = :maDanhMuc)
+                and :tenSanPham is null
+                    or lower(sp.tenSanPham) like lower(concat('%', :tenSanPham, '%'))
     """
-
     )
     Page<SanPham> timKiemVaLoc(@Param("maDanhMuc") String maDanhMuc,
                                @Param("tenSanPham") String tenSanPham,

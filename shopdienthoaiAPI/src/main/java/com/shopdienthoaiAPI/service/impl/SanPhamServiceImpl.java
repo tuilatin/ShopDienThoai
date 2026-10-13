@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,12 +23,24 @@ public class SanPhamServiceImpl implements ISanPhamService {
     private final SanPhamRepository sanPhamRepository;
     private final DanhMucRepository danhMucRepository;
 
+
+    public Page<SanPhamDto.Response> convertToSanPhamResponse(Page<SanPham> sanPhams){
+        return sanPhams.map(sp -> new SanPhamDto.Response(
+                sp.getMaSanPham(),
+                sp.getTenSanPham(),
+                sp.getDanhMuc().getMaDanhMuc(),
+                sp.getGiaBan(),
+                sp.getSoLuongTon(),
+                sp.getHinhAnh(),
+                sp.getMoTa(),
+                sp.getNgayTao()
+        ));
+    }
+
     @Override
-    public Page<SanPhamDto.Response> findAll(String maSanPham, String tenSanPham, Pageable pageable) {
-        return sanPhamRepository.findAll().stream()
-                .map(sp -> new SanPhamDto.Response
-                        (sp.getMaSanPham(), sp.getTenSanPham(), sp.getDanhMuc().getMaDanhMuc(),
-                        sp.getGiaBan(), sp.getSoLuongTon(), sp.getHinhAnh(), sp.getMoTa(), sp.getNgayTao())).toList();
+    public Page<SanPhamDto.Response> timKiemVaLoc(String maDanhMuc, String tenSanPham, Pageable pageable) {
+        Page<SanPham> sanPhams = sanPhamRepository.timKiemVaLoc(maDanhMuc, tenSanPham, pageable);
+                return convertToSanPhamResponse(sanPhams);
     }
 
     @Override
@@ -100,6 +113,16 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPhamRepository.delete(sanPham);
     }
 
+    @Override
+    public Page<SanPhamDto.Response> timKiemSanPhamTheoTen(String maSanPham) {
+        return null;
+    }
+
+    @Override
+    public Page<SanPhamDto.Response> locTheoDanhMucSanPham(String danhMuc) {
+        return null;
+    }
+
 //    @Override
 //    public List<SanPhamDto.Response> timKiemSanPhamTheoTen(String tenSanPham) {
 //        List<SanPham> sanPhams = sanPhamRepository.findSanPhamsByTenSanPhamContains((tenSanPham));
@@ -115,20 +138,20 @@ public class SanPhamServiceImpl implements ISanPhamService {
 //                )).toList();
 //    }
 
-    @Override
-    public Page<SanPhamDto.Response> locTheoDanhMucSanPham(String maDanhMuc) {
-        Page<SanPham> sanPhams = sanPhamRepository.findSanPhamsByDanhMuc_MaDanhMuc(maDanhMuc);
-        return sanPhams.map(sp -> new SanPhamDto.Response(
-                sp.getMaSanPham(),
-                sp.getTenSanPham(),
-                sp.getDanhMuc().getMaDanhMuc(),
-                sp.getGiaBan(),
-                sp.getSoLuongTon(),
-                sp.getHinhAnh(),
-                sp.getMoTa(),
-                sp.getNgayTao()
-        ));
-    }
+//    @Override
+//    public Page<SanPhamDto.Response> locTheoDanhMucSanPham(String maDanhMuc) {
+//        Page<SanPham> sanPhams = sanPhamRepository.findSanPhamsByDanhMuc_MaDanhMuc(maDanhMuc);
+//        return sanPhams.map(sp -> new SanPhamDto.Response(
+//                sp.getMaSanPham(),
+//                sp.getTenSanPham(),
+//                sp.getDanhMuc().getMaDanhMuc(),
+//                sp.getGiaBan(),
+//                sp.getSoLuongTon(),
+//                sp.getHinhAnh(),
+//                sp.getMoTa(),
+//                sp.getNgayTao()
+//        ));
+//    }
 
     @Override
     public Page<SanPhamDto.Response> phanTrang(Pageable pageable) {
@@ -145,6 +168,8 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 sp.getNgayTao()
         ));
     }
+
+
 
 
 }

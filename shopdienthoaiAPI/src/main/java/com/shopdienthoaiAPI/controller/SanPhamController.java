@@ -4,6 +4,7 @@ import com.shopdienthoaiAPI.dto.SanPhamDto;
 import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.service.ISanPhamService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,25 +32,15 @@ public class SanPhamController {
     public ResponseEntity<Page<SanPhamDto.Response>> findAll(
             @RequestParam(required = false) String maDanhMuc,
             @RequestParam(required = false) String tenSanPham,
+            @ParameterObject
             @PageableDefault(
                     page = 0,
                     size = 3
             ) Pageable pageable
             ) {
-        if (maDanhMuc == null && tenSanPham == null) {
-            return ResponseEntity.ok(sanPhamService.phanTrang(pageable));
-        }
-        if(maDanhMuc != null && tenSanPham == null) {
-            return ResponseEntity.ok(sanPhamService.locTheoDanhMucSanPham(maDanhMuc));
-        }
-
-        if(maDanhMuc == null && tenSanPham != null) {
-            return ResponseEntity.ok(sanPhamService.timKiemSanPhamTheoTen(tenSanPham));
-        }
-
-        Page<SanPhamDto.Response> sanPhams = sanPhamService.locTheoDanhMucSanPham(maDanhMuc);
-
-
+        return ResponseEntity.ok(
+                sanPhamService.timKiemVaLoc(maDanhMuc, tenSanPham, pageable)
+        );
 
     }
 
