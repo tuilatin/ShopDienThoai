@@ -44,24 +44,6 @@ public class SanPhamController {
 
     }
 
-    @GetMapping(value = "/timkiem", params = "tenSanPham")
-    public ResponseEntity<Page<SanPhamDto.Response>> timTheoTenSanPham(@RequestParam(required = false) String tenSanPham) {
-        return ResponseEntity.ok(sanPhamService.timKiemSanPhamTheoTen(tenSanPham));
-    }
-
-    @GetMapping(value = "/timkiem", params = "maDanhMuc")
-    public ResponseEntity<Page<SanPhamDto.Response>> locTheoDanhMucSanPham(@RequestParam(required = false) String maDanhMuc) {
-        return ResponseEntity.ok(sanPhamService.locTheoDanhMucSanPham(maDanhMuc));
-    }
-
-    @GetMapping("/phanTrang")
-    public Page<SanPhamDto.Response> phanTrang(@PageableDefault(
-            page = 0,
-            size = 3
-    ) Pageable pageable) {
-        return sanPhamService.phanTrang(pageable);
-    }
-
    @GetMapping("/{maSanPham}")
     public SanPhamDto.Response findSanPhamByMaSanPham(@PathVariable String maSanPham) {
         return sanPhamService.findSanPhamByMaSanPham(maSanPham);
