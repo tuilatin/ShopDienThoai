@@ -24,7 +24,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
     private final DanhMucRepository danhMucRepository;
 
 
-    public Page<SanPhamDto.Response> convertToSanPhamResponse(Page<SanPham> sanPhams){
+    public Page<SanPhamDto.Response> convertToPageSanPhamResponse(Page<SanPham> sanPhams){
         return sanPhams.map(sp -> new SanPhamDto.Response(
                 sp.getMaSanPham(),
                 sp.getTenSanPham(),
@@ -37,10 +37,21 @@ public class SanPhamServiceImpl implements ISanPhamService {
         ));
     }
 
+    public SanPhamDto.Response convertToSanPhamDto(SanPham sp){
+        return new SanPhamDto.Response(  sp.getMaSanPham(),
+                sp.getTenSanPham(),
+                sp.getDanhMuc().getMaDanhMuc(),
+                sp.getGiaBan(),
+                sp.getSoLuongTon(),
+                sp.getHinhAnh(),
+                sp.getMoTa(),
+                sp.getNgayTao());
+    }
+
     @Override
     public Page<SanPhamDto.Response> timKiemVaLoc(String maDanhMuc, String tenSanPham, Pageable pageable) {
         Page<SanPham> sanPhams = sanPhamRepository.timKiemVaLoc(maDanhMuc, tenSanPham, pageable);
-                return convertToSanPhamResponse(sanPhams);
+                return convertToPageSanPhamResponse(sanPhams);
     }
 
     @Override
@@ -48,16 +59,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
         SanPham sp = sanPhamRepository.findByMaSanPham(maSanPham)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Không tìm thấy sản phẩm"));
-        return new SanPhamDto.Response(
-                sp.getMaSanPham(),
-                sp.getTenSanPham(),
-                sp.getDanhMuc().getMaDanhMuc(),
-                sp.getGiaBan(),
-                sp.getSoLuongTon(),
-                sp.getHinhAnh(),
-                sp.getMoTa(),
-                sp.getNgayTao()
-        );
+        return convertToSanPhamDto(sp);
     }
 
     public String taoMaSanPham() {
@@ -95,16 +97,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPham.setSoLuongTon(sanPhamDto.soLuongTon());
         sanPham.setMoTa (sanPhamDto.moTa());
         SanPham sanPhamDaLuu = sanPhamRepository.save(sanPham);
-        return new SanPhamDto.Response(
-                sanPhamDaLuu.getMaSanPham(),
-                sanPhamDaLuu.getTenSanPham(),
-                sanPhamDaLuu.getDanhMuc().getMaDanhMuc(),
-                sanPhamDaLuu.getGiaBan(),
-                sanPhamDaLuu.getSoLuongTon(),
-                sanPhamDaLuu.getHinhAnh(),
-                sanPhamDaLuu.getMoTa(),
-                sanPhamDaLuu.getNgayTao()
-        );
+        return convertToSanPhamDto(sanPhamDaLuu);
     }
 
     @Override
@@ -156,17 +149,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
     @Override
     public Page<SanPhamDto.Response> phanTrang(Pageable pageable) {
         Page<SanPham> sanPhams =  sanPhamRepository.findAll(pageable);
-
-        return sanPhams.map(sp -> new SanPhamDto.Response(
-                sp.getMaSanPham(),
-                sp.getTenSanPham(),
-                sp.getDanhMuc().getMaDanhMuc(),
-                sp.getGiaBan(),
-                sp.getSoLuongTon(),
-                sp.getHinhAnh(),
-                sp.getMoTa(),
-                sp.getNgayTao()
-        ));
+        return convertToPageSanPhamResponse(sanPhams);
     }
 
 
