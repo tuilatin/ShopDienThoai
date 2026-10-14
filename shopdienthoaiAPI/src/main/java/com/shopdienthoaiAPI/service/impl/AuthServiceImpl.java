@@ -8,6 +8,9 @@ import com.shopdienthoaiAPI.repository.KhachHangRepository;
 import com.shopdienthoaiAPI.repository.TaiKhoanRepository;
 import com.shopdienthoaiAPI.service.IAuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements IAuthService {
     private final KhachHangRepository khachHangRepository;
     private final TaiKhoanRepository taiKhoanRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private String generateCustomerId(){
         return khachHangRepository.findTopByOrderByMaKhachHangDesc()
@@ -45,7 +49,7 @@ private String generateAccountId() {
         taiKhoan.setMaTaiKhoan(generateAccountId());
         taiKhoan.setKhachHang(khachHang);
         taiKhoan.setTenDangNhap(requestDto.username());
-        taiKhoan.setMatKhauHash(requestDto.password());
+        taiKhoan.setMatKhauHash(passwordEncoder.encode(requestDto.password()));
         taiKhoan.setVaiTro("CUSTOMER");
         taiKhoan.setTrangThai("ACTIVE");
         taiKhoanRepository.save(taiKhoan);
@@ -54,10 +58,12 @@ private String generateAccountId() {
     @Override
     public Boolean login(DangNhapRequestDto requestDto) {
         TaiKhoan taiKhoan = taiKhoanRepository.findTaiKhoanByTenDangNhap(requestDto.username());
-        if(taiKhoan != null && taiKhoan.getMatKhauHash().equals(requestDto.password())) {
+        if(taiKhoan != null && passwordEncoder.matches(requestDto.password(), taiKhoan.getMatKhauHash())) {
             return true;
         }else {
             return false;
         }
     }
+
+
 }
