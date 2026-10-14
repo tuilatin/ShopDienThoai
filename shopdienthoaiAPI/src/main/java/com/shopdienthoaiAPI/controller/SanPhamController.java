@@ -70,3 +70,4 @@ public class SanPhamController {
 
 //user ở trang detail/sp001 user gửi put kèm requestbody
 //trước tiên get sản phẩm
+//tiếp theo từng bước làm trang admin

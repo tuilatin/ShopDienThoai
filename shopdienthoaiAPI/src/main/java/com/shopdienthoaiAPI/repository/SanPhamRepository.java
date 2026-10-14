@@ -19,10 +19,6 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
     Optional<SanPham> findByMaSanPham(String maSanPham);
     SanPham findSanPhamsByMaSanPham(@Size(max = 5) String maSanPham);
 
-    List<SanPham> findSanPhamsByTenSanPham(@Size(max = 150) @NotNull String tenSanPham);
-
-    List<SanPham> findSanPhamsByTenSanPhamContains(@Size(max = 150) @NotNull String tenSanPham);
-
     @Query("""
         select sp from SanPham sp
             where (:maDanhMuc is null or sp.danhMuc.maDanhMuc = :maDanhMuc)
