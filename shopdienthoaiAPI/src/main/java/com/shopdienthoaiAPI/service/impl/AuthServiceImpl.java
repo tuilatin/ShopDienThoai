@@ -1,6 +1,7 @@
 package com.shopdienthoaiAPI.service.impl;
 
 import com.shopdienthoaiAPI.dto.DangNhapRequestDto;
+import com.shopdienthoaiAPI.dto.DangNhapResponseDto;
 import com.shopdienthoaiAPI.dto.DangkyRequestDto;
 import com.shopdienthoaiAPI.entity.KhachHang;
 import com.shopdienthoaiAPI.entity.TaiKhoan;
@@ -56,12 +57,14 @@ private String generateAccountId() {
     }
 
     @Override
-    public Boolean login(DangNhapRequestDto requestDto) {
+    public DangNhapResponseDto login(DangNhapRequestDto requestDto) {
         TaiKhoan taiKhoan = taiKhoanRepository.findTaiKhoanByTenDangNhap(requestDto.username());
         if(taiKhoan != null && passwordEncoder.matches(requestDto.password(), taiKhoan.getMatKhauHash())) {
-            return true;
+            return new DangNhapResponseDto(taiKhoan.getMaTaiKhoan()
+                    ,taiKhoan.getTenDangNhap(),
+                    taiKhoan.getVaiTro());
         }else {
-            return false;
+            return;
         }
     }
 
