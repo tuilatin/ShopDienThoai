@@ -72,7 +72,4 @@ private String generateAccountId() {
                     "Tên đăng nhập hoặc mật khẩu không đúng"
             );
         }
-    }
-
-
 }
