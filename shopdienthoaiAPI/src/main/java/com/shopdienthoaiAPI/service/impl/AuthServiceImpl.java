@@ -10,9 +10,12 @@ import com.shopdienthoaiAPI.repository.TaiKhoanRepository;
 import com.shopdienthoaiAPI.service.IAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -63,8 +66,11 @@ private String generateAccountId() {
             return new DangNhapResponseDto(taiKhoan.getMaTaiKhoan()
                     ,taiKhoan.getTenDangNhap(),
                     taiKhoan.getVaiTro());
-        }else {
-            return;
+        }
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Tên đăng nhập hoặc mật khẩu không đúng"
+            );
         }
     }
 
