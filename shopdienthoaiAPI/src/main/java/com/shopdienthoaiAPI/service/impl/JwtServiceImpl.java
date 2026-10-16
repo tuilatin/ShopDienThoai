@@ -3,6 +3,7 @@ package com.shopdienthoaiAPI.service.impl;
 import com.shopdienthoaiAPI.dto.DangNhapRequestDto;
 import com.shopdienthoaiAPI.dto.DangNhapResponseDto;
 import com.shopdienthoaiAPI.service.JwtService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -42,8 +43,13 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public DangNhapResponseDto validateToken(String token) {
-        return null;
+    public String validateToken(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 
 }

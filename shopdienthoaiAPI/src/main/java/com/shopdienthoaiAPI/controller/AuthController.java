@@ -23,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/dangnhap")
     public ResponseEntity<String> dangnhapTaiKhoan(@RequestBody DangNhapRequestDto dangnhapRequestDto) {
-        if(authService.login(dangnhapRequestDto)){
+        if(authService.login(dangnhapRequestDto) != null){
             return ResponseEntity.ok("Đăng nhập thành công rồi bạn ơi");
         };
 
