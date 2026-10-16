@@ -4,7 +4,7 @@ import com.shopdienthoaiAPI.dto.DangNhapRequestDto;
 import com.shopdienthoaiAPI.dto.DangNhapResponseDto;
 
 public interface JwtService {
-    String generateToken(DangNhapRequestDto requestDto);
+    String generateToken(String tenDangNhap);
     DangNhapResponseDto validateToken(String token);
 
 }

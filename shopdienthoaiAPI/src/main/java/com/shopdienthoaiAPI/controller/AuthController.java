@@ -21,13 +21,13 @@ public class AuthController {
         return ResponseEntity.ok("Đăng ký thành công");
     }
 
-//    @PostMapping("/dangnhap")
-//    public ResponseEntity<String> dangnhapTaiKhoan(@RequestBody DangNhapRequestDto dangnhapRequestDto) {
-//        if(authService.login(dangnhapRequestDto)){
-//            return ResponseEntity.ok("Đăng nhập thành công rồi bạn ơi");
-//        };
-//
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Tên đăng nhập hoặc mật khẩu không đúng");
-//
-//    }
+    @PostMapping("/dangnhap")
+    public ResponseEntity<String> dangnhapTaiKhoan(@RequestBody DangNhapRequestDto dangnhapRequestDto) {
+        if(authService.login(dangnhapRequestDto)){
+            return ResponseEntity.ok("Đăng nhập thành công rồi bạn ơi");
+        };
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Tên đăng nhập hoặc mật khẩu không đúng");
+
+    }
 }

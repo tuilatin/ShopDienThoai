@@ -23,6 +23,7 @@ public class AuthServiceImpl implements IAuthService {
     private final KhachHangRepository khachHangRepository;
     private final TaiKhoanRepository taiKhoanRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtServiceImpl jwtService;
 
     private String generateCustomerId(){
         return khachHangRepository.findTopByOrderByMaKhachHangDesc()
@@ -65,7 +66,7 @@ private String generateAccountId() {
         if(taiKhoan != null && passwordEncoder.matches(requestDto.password(), taiKhoan.getMatKhauHash())) {
             return new DangNhapResponseDto(taiKhoan.getMaTaiKhoan()
                     ,taiKhoan.getTenDangNhap(),
-                    taiKhoan.getVaiTro());
+                    taiKhoan.getVaiTro(), jwtService.generateToken(taiKhoan.getTenDangNhap()));
         }
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
