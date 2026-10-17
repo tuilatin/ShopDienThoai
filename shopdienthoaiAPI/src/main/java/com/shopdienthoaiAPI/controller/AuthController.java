@@ -1,6 +1,7 @@
 package com.shopdienthoaiAPI.controller;
 
 import com.shopdienthoaiAPI.dto.DangNhapRequestDto;
+import com.shopdienthoaiAPI.dto.DangNhapResponseDto;
 import com.shopdienthoaiAPI.dto.DangkyRequestDto;
 import com.shopdienthoaiAPI.service.IAuthService;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +23,8 @@ public class AuthController {
     }
 
     @PostMapping("/dangnhap")
-    public ResponseEntity<String> dangnhapTaiKhoan(@RequestBody DangNhapRequestDto dangnhapRequestDto) {
-        if(authService.login(dangnhapRequestDto) != null){
-            return ResponseEntity.ok("Đăng nhập thành công rồi bạn ơi");
-        };
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Tên đăng nhập hoặc mật khẩu không đúng");
-
+    public ResponseEntity<DangNhapResponseDto> dangnhapTaiKhoan(@RequestBody DangNhapRequestDto dangnhapRequestDto) {
+        DangNhapResponseDto data = authService.login(dangnhapRequestDto);
+        return ResponseEntity.ok(data);
     }
 }
