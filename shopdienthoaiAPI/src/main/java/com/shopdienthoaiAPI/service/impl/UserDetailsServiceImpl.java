@@ -5,6 +5,7 @@ import com.shopdienthoaiAPI.repository.TaiKhoanRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,21 +22,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         TaiKhoan taiKhoan = taikhoanRepository.findTaiKhoanByTenDangNhap(username);
-        return new UserDetails() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return List.of();
-            }
+        if (taiKhoan == null) {
+            throw new UsernameNotFoundException("Không tìm thấy tài khoản");
+        }
 
-            @Override
-            public @Nullable String getPassword() {
-                return "";
-            }
-
-            @Override
-            public String getUsername() {
-                return "";
-            }
-        };
+        return User.withUsername(taiKhoan.getTenDangNhap())
+                .password(taiKhoan.getMatKhauHash())
+                .authorities("ROLE_" + taiKhoan.getVaiTro())
+                .build();
     }
 }

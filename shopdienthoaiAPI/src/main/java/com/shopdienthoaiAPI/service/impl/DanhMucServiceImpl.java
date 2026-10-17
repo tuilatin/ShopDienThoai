@@ -13,7 +13,6 @@ import java.util.List;
 public class DanhMucServiceImpl implements IDanhMucService {
     private final DanhMucRepository danhMucRepository;
 
-
     @Override
     public List<DanhMucDto.Response> findAll() {
         return danhMucRepository.findAll().stream()
