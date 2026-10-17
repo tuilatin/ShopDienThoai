@@ -30,8 +30,8 @@ public class SanPhamController {
 
     @GetMapping
     public ResponseEntity<Page<SanPhamDto.Response>> findAll(
-            @RequestParam(required = false) String maDanhMuc,
-            @RequestParam(required = false) String tenSanPham,
+            @RequestParam(required = false, defaultValue = "") String maDanhMuc,
+            @RequestParam(required = false, defaultValue = "") String tenSanPham,
             @ParameterObject
             @PageableDefault(
                     page = 0,
