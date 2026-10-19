@@ -46,8 +46,22 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/v1/sanpham/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/sanpham/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
-        ) .exceptionHandling(
-                        ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+        ).exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(
+                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
+                        )
+                        .accessDeniedHandler((request, response, exception) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.setContentType("application/json;charset=UTF-8");
+
+                            response.getWriter().write("""
+            {
+                "status": 403,
+                "message": "Bạn không có quyền truy cập API này"
+            }
+            """);
+                        })
+                )
                 .httpBasic(AbstractHttpConfigurer::disable);
 
         return http.build();

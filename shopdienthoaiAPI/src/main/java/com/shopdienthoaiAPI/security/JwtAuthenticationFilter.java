@@ -14,10 +14,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.Collections;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -41,6 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }catch (JwtException | IllegalArgumentException e){
+         log.warn("JWT bị từ chối: {}", e.getMessage());
          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
          return;
      }
