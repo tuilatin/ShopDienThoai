@@ -45,6 +45,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/v1/sanpham").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/sanpham/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/sanpham/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/danhmuc").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/sanpham").permitAll()
                         .anyRequest().authenticated()
         ).exceptionHandling(ex -> ex
                         .authenticationEntryPoint(

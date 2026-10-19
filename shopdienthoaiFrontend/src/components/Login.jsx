@@ -88,7 +88,10 @@ export async function loginAction({ request }) {
 
   try {
     const response = await apiClient.post("/auth/dangnhap", loginData);
-    return redirect("/"); // Redirect to the home page after successful login
+    const { jwtToken, vaiTro } = response.data;
+    sessionStorage.setItem("jwtToken", jwtToken);
+    sessionStorage.setItem("vaiTro", vaiTro);
+    return redirect(vaiTro === "admin" ? "/admin" : "/"); // Redirect based on user role
   } catch (error) {
     return { success: false, message: error.response.data.message };
   }
