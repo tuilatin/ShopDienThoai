@@ -12,6 +12,7 @@ import { loginAction } from "./components/Login.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 import ProductDetail from "./components/ProductDetail.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
+import AdminProducts from "./components/admin/AdminProducts.jsx";
 
 import {
   createBrowserRouter,
@@ -32,7 +33,9 @@ const routeDenfinitions = createRoutesFromElements(
     />
     <Route path="/cart" element={<Cart />} />
     <Route path="/chitietsanpham/:maSanPham" element={<ProductDetail />} />
-    <Route path="/admin/products" element={<AdminLayout />} />
+    <Route path="/admin" element={<AdminLayout />}>
+      <Route path="products" element={<AdminProducts />} />
+    </Route>
   </Route>,
 );
 
