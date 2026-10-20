@@ -11,6 +11,7 @@ import { registerAction } from "./components/Register.jsx";
 import { loginAction } from "./components/Login.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 import ProductDetail from "./components/ProductDetail.jsx";
+import AdminLayout from "./components/admin/AdminLayout.jsx";
 
 import {
   createBrowserRouter,
@@ -31,6 +32,7 @@ const routeDenfinitions = createRoutesFromElements(
     />
     <Route path="/cart" element={<Cart />} />
     <Route path="/chitietsanpham/:maSanPham" element={<ProductDetail />} />
+    <Route path="/admin/products" element={<AdminLayout />} />
   </Route>,
 );
 
