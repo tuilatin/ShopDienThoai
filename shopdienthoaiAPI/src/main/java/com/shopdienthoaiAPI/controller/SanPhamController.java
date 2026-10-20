@@ -35,7 +35,7 @@ public class SanPhamController {
             @ParameterObject
             @PageableDefault(
                     page = 0,
-                    size = 3
+                    size = 30
             ) Pageable pageable
             ) {
         return ResponseEntity.ok(
