@@ -4,10 +4,9 @@ import { Outlet } from "react-router-dom";
 
 export default function AdminLayout() {
   return (
-    <>
-      <Sidebar></Sidebar>
+    <div className="min-h-screen ">
+      <p>Admin Sidebar</p>
       <header></header>
-      <Outlet />
-    </>
+    </div>
   );
 }
