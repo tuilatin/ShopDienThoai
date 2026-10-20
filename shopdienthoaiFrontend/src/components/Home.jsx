@@ -206,12 +206,17 @@ export async function DanhMucLoader() {
       throw new Error(`Không thể tải sản phẩm (${sanPhamRes.status})`);
     }
 
-    const [danhMucs, sanPhams] = await Promise.all([
+    const [danhMucs, sanPhamPage] = await Promise.all([
       danhMucRes.json(),
       sanPhamRes.json(),
     ]);
 
-    return { danhMucs, sanPhams };
+    return {
+      danhMucs,
+      sanPhams: Array.isArray(sanPhamPage)
+        ? sanPhamPage
+        : sanPhamPage.content,
+    };
   } catch (error) {
     console.error("Error fetching home data:", error);
     throw error;
