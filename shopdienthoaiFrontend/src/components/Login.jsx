@@ -91,7 +91,7 @@ export async function loginAction({ request }) {
     const { jwtToken, vaiTro } = response.data;
     sessionStorage.setItem("jwtToken", jwtToken);
     sessionStorage.setItem("vaiTro", vaiTro);
-    return redirect(vaiTro === "admin" ? "/admin" : "/"); // Redirect based on user role
+    return redirect(vaiTro === "ADMIN" ? "/admin" : "/"); // Redirect based on user role
   } catch (error) {
     return { success: false, message: error.response.data.message };
   }

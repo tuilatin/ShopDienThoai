@@ -13,6 +13,7 @@ import ErrorPage from "./components/ErrorPage.jsx";
 import ProductDetail from "./components/ProductDetail.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
 import AdminProducts from "./components/admin/AdminProducts.jsx";
+import RequireAdmin from "./components/RequireAdmin.jsx";
 
 import {
   createBrowserRouter,
@@ -33,8 +34,10 @@ const routeDenfinitions = createRoutesFromElements(
     />
     <Route path="/cart" element={<Cart />} />
     <Route path="/chitietsanpham/:maSanPham" element={<ProductDetail />} />
-    <Route path="/admin" element={<AdminLayout />}>
-      <Route path="products" element={<AdminProducts />} />
+    <Route element={<RequireAdmin />}>
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="products" element={<AdminProducts />} />
+      </Route>
     </Route>
   </Route>,
 );
