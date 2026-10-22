@@ -1,3 +1,4 @@
+import apiClient from "@/api/apiClient";
 import React from "react";
 
 export default function AdminProducts() {
@@ -12,4 +13,9 @@ export default function AdminProducts() {
       <div>Mô tả: </div>
     </>
   );
+}
+
+export async function GetProducts() {
+  const response = await apiClient.get("/sanpham");
+  return response.data;
 }
