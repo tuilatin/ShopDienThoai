@@ -1,15 +1,15 @@
-import apiClient from "../api/apiClient";
+import apiClient from "../../api/apiClient";
 
 export default function AdminProducts() {
   return (
     <>
-      <div>Mã sản phẩm: sản phẩm 1</div>
-      <div>Tên sản phẩm: SP001</div>
-      <div>Mã danh mục: DM001</div>
-      <div>Giá bán: 1000000vnđ</div>
-      <div>Số lượng tồn: 10</div>
-      <div>Hình ảnh: </div>
-      <div>Mô tả: </div>
+      <div>Mã sản phẩm: {sanPham.maSanPham}</div>
+      <div>Tên sản phẩm: {sanPham.tenSanPham}</div>
+      <div>Mã danh mục: {sanPham.maDanhMuc}</div>
+      <div>Giá bán: {sanPham.giaBan}</div>
+      <div>Số lượng tồn: {sanPham.soLuongTon}</div>
+      <div>Hình ảnh: {sanPham.hinhAnh}</div>
+      <div>Mô tả: {sanPham.moTa}</div>
     </>
   );
 }
