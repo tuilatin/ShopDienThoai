@@ -1,5 +1,4 @@
 import apiClient from "@/api/apiClient";
-import React from "react";
 
 export default function AdminProducts() {
   return (
