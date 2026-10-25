@@ -1,11 +1,19 @@
+import axios from "axios";
 import apiClient from "../../api/apiClient";
+import { useEffect, useState } from "react";
 
 export default function AdminProducts() {
   const [sanPhams, setSanPhams] = useState([]);
 
-  useEffect(async () => {
-    const response = await apiClient.get("/sanpham");
-    setSanPhams(response.data);
+  useEffect(() => {
+    axios
+      .get("/sanpham")
+      .then((response) => {
+        setSanPhams(response.data);
+      })
+      .catch((error) => {
+        console.error("Lỗi tải sản phẩm: ", error);
+      });
   }, []);
 
   return (
@@ -25,5 +33,3 @@ export default function AdminProducts() {
     </>
   );
 }
-
-export async function GetProducts() {}
