@@ -6,9 +6,10 @@ export default function AdminProducts() {
   const [sanPhams, setSanPhams] = useState([]);
 
   useEffect(() => {
-    axios
+    apiClient
       .get("/sanpham")
       .then((response) => {
+        console.log(response.data);
         setSanPhams(response.data);
       })
       .catch((error) => {
