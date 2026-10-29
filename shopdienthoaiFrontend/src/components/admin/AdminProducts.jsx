@@ -34,35 +34,18 @@ export default function AdminProducts() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
-            <tr>
+
+              sanPhams.map((sanPham) => (
+                <tr key={sanPham.id}>
+                  <td className="py-3 px-5 font-medium">{sanPham.maSanPham}</td>
               <td className="py-3 px-5 font-medium">#ORD-9821</td>
               <td className="py-3 px-5">Nguyễn Văn A</td>
               <td className="py-3 px-5">1,250,000 ₫</td>
-              <td className="py-3 px-5">
-                <span className="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-xs font-semibold">
-                  Hoàn thành
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <td className="py-3 px-5 font-medium">#ORD-9822</td>
-              <td className="py-3 px-5">Trần Thị B</td>
-              <td className="py-3 px-5">450,000 ₫</td>
-              <td className="py-3 px-5">
-                <span className="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full text-xs font-semibold">
-                  Đang xử lý
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <td className="py-3 px-5 font-medium">#ORD-9823</td>
-              <td className="py-3 px-5">Lê Văn C</td>
-              <td className="py-3 px-5">3,100,000 ₫</td>
-              <td className="py-3 px-5">
-                <span className="bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-xs font-semibold">
-                  Đã hủy
-                </span>
-              </td>
+              <td className="py-3 px-5">1,250,000 ₫</td>
+              <td className="py-3 px-5">1,250,000 ₫</td>
+              <td className="py-3 px-5">1,250,000 ₫</td>
+              <td className="py-3 px-5">1,250,000 ₫</td>
+              <td className="py-3 px-5">1,250,000 ₫</td>)
             </tr>
           </tbody>
         </table>
