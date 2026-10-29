@@ -23,10 +23,14 @@ export default function AdminProducts() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
-              <th className="py-3 px-5">Mã đơn</th>
-              <th className="py-3 px-5">Khách hàng</th>
-              <th className="py-3 px-5">Tổng tiền</th>
-              <th className="py-3 px-5">Trạng thái</th>
+              <th className="py-3 px-5">Mã sản phẩm</th>
+              <th className="py-3 px-5">Tên sản phẩm</th>
+              <th className="py-3 px-5">Mã danh mục</th>
+              <th className="py-3 px-5">Giá bán</th>
+              <th className="py-3 px-5">Số lượng tồn</th>
+              <th className="py-3 px-5">Hình ảnh</th>
+              <th className="py-3 px-5">Mô tả</th>
+              <th className="py-3 px-5">Hành động</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
