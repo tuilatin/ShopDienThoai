@@ -10,7 +10,7 @@ export default function AdminProducts() {
       .get("/sanpham")
       .then((response) => {
         console.log(response.data);
-        setSanPhams(response.data);
+        setSanPhams(response.data.content);
       })
       .catch((error) => {
         console.error("Lỗi tải sản phẩm: ", error);
@@ -21,7 +21,7 @@ export default function AdminProducts() {
     <>
       <div>
         {sanPhams.map((sanPham) => (
-          <div key={sanPham.maSanPham}>
+          <div key={sanPham.maSanPham} className="flex">
             <div>Tên sản phẩm: {sanPham.tenSanPham}</div>
             <div>Mã danh mục: {sanPham.maDanhMuc}</div>
             <div>Giá bán: {sanPham.giaBan}</div>
