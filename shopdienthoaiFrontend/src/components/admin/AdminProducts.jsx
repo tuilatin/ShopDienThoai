@@ -4,7 +4,7 @@ import AddProduct from "./AddProduct";
 
 export default function AdminProducts() {
   const [sanPhams, setSanPhams] = useState([]);
-  const [isAddingProduct, setIsAddingProduct] = useState(false);
+  const [isAddProduct, setIsAddProduct] = useState(false);
 
   const taiDanhSachSanPham = async () => {
     try {
@@ -39,17 +39,17 @@ export default function AdminProducts() {
         <h1 className="text-2xl font-bold mb-4">Quản lý sản phẩm</h1>
         <button
           type="button"
-          onClick={() => setIsAddingProduct((isOpen) => !isOpen)}
-          aria-expanded={isAddingProduct}
+          onClick={() => setIsAddProduct((isOpen) => !isOpen)}
+          aria-expanded={isAddProduct}
           className="bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600 cursor-pointer mb-4"
         >
           Thêm sản phẩm
         </button>
-        {isAddingProduct && (
+        {isAddProduct && (
           <AddProduct
-            onCancel={() => setIsAddingProduct(false)}
+            onCancel={() => setIsAddProduct(false)}
             onProductCreated={() => {
-              setIsAddingProduct(false);
+              setIsAddProduct(false);
               taiDanhSachSanPham();
             }}
           />
