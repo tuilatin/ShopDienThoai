@@ -35,18 +35,31 @@ export default function AdminProducts() {
           </thead>
           <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
 
-              sanPhams.map((sanPham) => (
-                <tr key={sanPham.id}>
+              {sanPhams.map((sanPham) => (
+                <tr key={sanPham.maSanPham} className="border-b border-slate-200">
                   <td className="py-3 px-5 font-medium">{sanPham.maSanPham}</td>
-              <td className="py-3 px-5 font-medium">#ORD-9821</td>
-              <td className="py-3 px-5">Nguyễn Văn A</td>
-              <td className="py-3 px-5">1,250,000 ₫</td>
-              <td className="py-3 px-5">1,250,000 ₫</td>
-              <td className="py-3 px-5">1,250,000 ₫</td>
-              <td className="py-3 px-5">1,250,000 ₫</td>
+                  <td className="py-3 px-5 font-medium">{sanPham.tenSanPham}</td>
+                  <td className="py-3 px-5">{sanPham.maDanhMuc}</td>
+                  <td className="py-3 px-5">{sanPham.giaBan.toLocaleString()} ₫</td>
+                  <td className="py-3 px-5">{sanPham.soLuongTon}</td>
+                  <td className="py-3 px-5">
+                    <img src={sanPham.hinhAnh} alt={sanPham.tenSanPham} className="w-16 h-16 object-cover" />
+                  </td>
+                  <td className="py-3 px-5">{sanPham.moTa}</td>
+                  <td className="py-3 px-5">
+                    <button className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">
+                      Sửa
+                    </button>
+                    <button className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 ml-2">
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              ))}
               <td className="py-3 px-5">1,250,000 ₫</td>
               <td className="py-3 px-5">1,250,000 ₫</td>)
             </tr>
+              )}
           </tbody>
         </table>
       </div>
