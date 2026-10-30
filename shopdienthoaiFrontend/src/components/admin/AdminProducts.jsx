@@ -1,6 +1,7 @@
 import apiClient from "../../api/apiClient";
 import { useEffect, useState } from "react";
 import AddProduct from "./AddProduct";
+import ThemSanPham from "./ThemSanPham";
 
 export default function AdminProducts() {
   const [sanPhams, setSanPhams] = useState([]);
@@ -46,7 +47,7 @@ export default function AdminProducts() {
           Thêm sản phẩm
         </button>
         {isAddProduct && (
-          <AddProduct
+          <ThemSanPham
             onCancel={() => setIsAddProduct(false)}
             onProductCreated={() => {
               setIsAddProduct(false);
