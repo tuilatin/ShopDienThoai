@@ -39,7 +39,7 @@ export default function AdminProducts() {
         <h1 className="text-2xl font-bold mb-4">Quản lý sản phẩm</h1>
         <button
           type="button"
-          onClick={() => setIsAddProduct((isOpen) => !isOpen)}
+          onClick={() => setIsAddProduct(true)}
           aria-expanded={isAddProduct}
           className="bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600 cursor-pointer mb-4"
         >
@@ -54,6 +54,7 @@ export default function AdminProducts() {
             }}
           />
         )}
+
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
