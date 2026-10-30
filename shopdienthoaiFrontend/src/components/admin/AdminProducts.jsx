@@ -1,29 +1,59 @@
-import axios from "axios";
 import apiClient from "../../api/apiClient";
 import { useEffect, useState } from "react";
+import AddProduct from "./AddProduct";
 
 export default function AdminProducts() {
   const [sanPhams, setSanPhams] = useState([]);
+  const [isAddingProduct, setIsAddingProduct] = useState(false);
+
+  const taiDanhSachSanPham = async () => {
+    try {
+      const response = await apiClient.get("/sanpham");
+      setSanPhams(response.data.content ?? []);
+    } catch (error) {
+      console.error("Lỗi tải sản phẩm: ", error);
+    }
+  };
 
   useEffect(() => {
+    let isMounted = true;
     apiClient
       .get("/sanpham")
       .then((response) => {
-        console.log(response.data);
-        setSanPhams(response.data.content);
+        if (isMounted) {
+          setSanPhams(response.data.content ?? []);
+        }
       })
       .catch((error) => {
         console.error("Lỗi tải sản phẩm: ", error);
       });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
     <>
       <div>
         <h1 className="text-2xl font-bold mb-4">Quản lý sản phẩm</h1>
-        <p className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 cursor-pointer mb-4 w-40">
+        <button
+          type="button"
+          onClick={() => setIsAddingProduct((isOpen) => !isOpen)}
+          aria-expanded={isAddingProduct}
+          className="bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600 cursor-pointer mb-4"
+        >
           Thêm sản phẩm
-        </p>
+        </button>
+        {isAddingProduct && (
+          <AddProduct
+            onCancel={() => setIsAddingProduct(false)}
+            onProductCreated={() => {
+              setIsAddingProduct(false);
+              taiDanhSachSanPham();
+            }}
+          />
+        )}
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
