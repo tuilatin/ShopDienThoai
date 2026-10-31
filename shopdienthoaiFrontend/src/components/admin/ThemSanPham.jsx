@@ -1,6 +1,20 @@
-import React from "react";
+import React, { use, useState } from "react";
+import apiClient from "../../api/apiClient";
 
 export default function ThemSanPham({ onCancel, onProductCreated }) {
+  const [danhMucs, setDanhMucs] = useState([]);
+
+  useEffect(() => {
+    const taiDanhMuc = async () => {
+      try {
+        const response = await apiClient.get("/danhmuc");
+        setDanhMucs(response.data);
+      } catch (error) {
+        console.error("Lỗi khi tải danh mục:", error);
+      }
+    };
+  }, []);
+
   return (
     <div>
       <form className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
