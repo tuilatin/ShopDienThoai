@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { use, useState, useEffect } from "react";
 import apiClient from "../../api/apiClient";
 
 export default function ThemSanPham({ onCancel, onProductCreated }) {
@@ -13,6 +13,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         console.error("Lỗi khi tải danh mục:", error);
       }
     };
+    taiDanhMuc();
   }, []);
 
   return (
@@ -45,7 +46,11 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
                 id=""
                 className="rounded border border-slate-300 px-3 py-2 font-normal disabled:bg-slate-100"
               >
-                <option value="">xin mời</option>
+                {danhMucs.map((danhMuc) => (
+                  <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
+                    {danhMuc.tenDanhMuc}
+                  </option>
+                ))}
               </select>
             </label>
           </div>
