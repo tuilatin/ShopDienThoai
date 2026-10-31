@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ThemSanPham(onCancel) {
+export default function ThemSanPham({ onCancel, onProductCreated }) {
   return (
     <div>
       <form className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
