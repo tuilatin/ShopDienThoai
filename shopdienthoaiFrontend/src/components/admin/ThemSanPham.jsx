@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ThemSanPham() {
+export default function ThemSanPham(onCancel) {
   return (
     <div>
       <form className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
@@ -84,6 +84,21 @@ export default function ThemSanPham() {
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             ></textarea>
           </div>
+        </div>
+        <div>
+          <button
+            type="submit"
+            className="rounded bg-green-500 px-4 py-2 text-white hover:bg-blue-600"
+          >
+            Lưu
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded bg-red-500 px-4 py-2 text-white hover:bg-purple-600"
+          >
+            Hủy
+          </button>
         </div>
       </form>
     </div>
