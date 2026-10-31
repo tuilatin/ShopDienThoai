@@ -25,13 +25,15 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
               htmlFor="maDanhMuc"
               className="flex flex-col gap-1 text-sm font-medium"
             >
-              Mã danh mục:
+              Danh mục
+              <select
+                name=""
+                id=""
+                className="rounded border border-slate-300 px-3 py-2 font-normal disabled:bg-slate-100"
+              >
+                <option value="">xin mời</option>
+              </select>
             </label>
-            <input
-              type="text"
-              id="maDanhMuc"
-              className="rounded border border-slate-300 px-3 py-2 font-normal"
-            />
           </div>
           <div>
             <label
