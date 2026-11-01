@@ -3,6 +3,17 @@ import apiClient from "../../api/apiClient";
 
 export default function ThemSanPham({ onCancel, onProductCreated }) {
   const [danhMucs, setDanhMucs] = useState([]);
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      setImage(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
 
   useEffect(() => {
     const taiDanhMuc = async () => {
@@ -90,8 +101,12 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             <input
               type="file"
               id="hinhAnh"
+              accept="image/"
+              onChange={handleImageChange}
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             />
+
+            {preview && <img src={preview} alt="Preview" width="200" />}
           </div>
           <div>
             <label
