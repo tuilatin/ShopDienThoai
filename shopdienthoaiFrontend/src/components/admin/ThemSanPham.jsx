@@ -15,6 +15,14 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
     }
   };
 
+  const handleSubmit = async (event) => {
+    try {
+      const 
+    } catch (error) {
+      
+    }
+  }
+
   useEffect(() => {
     const taiDanhMuc = async () => {
       try {
@@ -124,6 +132,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         <div>
           <button
             type="submit"
+            onClick={handleSubmit}
             className="rounded bg-green-500 px-4 py-2 text-white hover:bg-blue-600"
           >
             Lưu
@@ -139,4 +148,24 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
       </form>
     </div>
   );
+}
+
+export async function addProductAction({ request }) {
+  const productFormData = await request.formData();
+  const productData = {
+    tenSanPham: productFormData.get("tenSanPham"),
+    maDanhMuc: productFormData.get("maDanhMuc"),
+    giaBan: parseFloat(productFormData.get("giaBan")),
+    soLuongTon: parseInt(productFormData.get("soLuongTon"), 10),
+    hinhAnh: productFormData.get("hinhAnh"),
+    moTa: productFormData.get("moTa"),
+  };
+  // Here you would typically save the productData to your database
+  try {
+    const response = await apiClient.post("/sanpham", productData);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    throw error;
+  }
 }

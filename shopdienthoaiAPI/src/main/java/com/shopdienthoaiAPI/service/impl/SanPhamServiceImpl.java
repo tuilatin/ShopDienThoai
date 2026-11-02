@@ -73,14 +73,14 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Override
     public void themSampham(SanPhamDto.Request sanPhamDto) {
-        DanhMuc danhMuc = new DanhMuc();
-        danhMuc.setMaDanhMuc(sanPhamDto.maDanhMuc());
+        DanhMuc danhMuc = danhMucRepository.findDanhMucsByMaDanhMuc((sanPhamDto.maDanhMuc()));
         SanPham sanPham = new SanPham();
         sanPham.setMaSanPham (taoMaSanPham());
         sanPham.setTenSanPham (sanPhamDto.tenSanPham());
         sanPham.setDanhMuc(danhMuc);
         sanPham.setGiaBan (sanPhamDto.giaBan());
         sanPham.setSoLuongTon(sanPhamDto.soLuongTon());
+        sanPham.setHinhAnh (sanPhamDto.hinhAnh());
         sanPham.setMoTa (sanPhamDto.moTa());
         sanPham.setNgayTao (Instant.now());
         sanPhamRepository.save(sanPham);

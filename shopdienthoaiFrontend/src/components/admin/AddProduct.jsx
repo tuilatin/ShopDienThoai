@@ -71,7 +71,10 @@ export default function AddProduct({ onCancel, onProductCreated }) {
       <h2 className="mb-4 text-xl font-semibold">Thông tin sản phẩm mới</h2>
 
       {errorMessage && (
-        <p role="alert" className="mb-4 rounded bg-red-50 p-3 text-sm text-red-700">
+        <p
+          role="alert"
+          className="mb-4 rounded bg-red-50 p-3 text-sm text-red-700"
+        >
           {errorMessage}
         </p>
       )}
@@ -162,7 +165,9 @@ export default function AddProduct({ onCancel, onProductCreated }) {
       <div className="mt-5 flex gap-2">
         <button
           type="submit"
-          disabled={isSubmitting || isLoadingCategories || danhMucs.length === 0}
+          disabled={
+            isSubmitting || isLoadingCategories || danhMucs.length === 0
+          }
           className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? "Đang lưu..." : "Lưu sản phẩm"}
