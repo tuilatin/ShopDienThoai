@@ -15,14 +15,6 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
     }
   };
 
-  const handleSubmit = async (event) => {
-    try {
-      const 
-    } catch (error) {
-      
-    }
-  }
-
   useEffect(() => {
     const taiDanhMuc = async () => {
       try {
@@ -132,7 +124,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         <div>
           <button
             type="submit"
-            onClick={handleSubmit}
+            onClick={addProductAction}
             className="rounded bg-green-500 px-4 py-2 text-white hover:bg-blue-600"
           >
             Lưu
