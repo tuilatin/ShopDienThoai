@@ -1,5 +1,6 @@
 import React, { use, useState, useEffect } from "react";
 import apiClient from "../../api/apiClient";
+import { Form } from "react-router-dom";
 
 export default function ThemSanPham({ onCancel, onProductCreated }) {
   const [danhMucs, setDanhMucs] = useState([]);
@@ -29,7 +30,10 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
 
   return (
     <div>
-      <form className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <Form
+        method="post"
+        className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+      >
         <div>Thông tin sản phẩm mới</div>
 
         <div className="flex">
@@ -124,7 +128,6 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         <div>
           <button
             type="submit"
-            onClick={addProductAction}
             className="rounded bg-green-500 px-4 py-2 text-white hover:bg-blue-600"
           >
             Lưu
@@ -137,7 +140,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             Hủy
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }
