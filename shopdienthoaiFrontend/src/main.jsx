@@ -37,8 +37,11 @@ const routeDenfinitions = createRoutesFromElements(
     <Route path="/chitietsanpham/:maSanPham" element={<ProductDetail />} />
     <Route element={<RequireAdmin />}>
       <Route path="/admin" element={<AdminLayout />}>
-        <Route path="products" element={<AdminProducts />} />
-        <Route element={<addProductAction />} action={addProductAction} />
+        <Route
+          path="products"
+          element={<AdminProducts />}
+          action={addProductAction}
+        />
       </Route>
     </Route>
   </Route>,

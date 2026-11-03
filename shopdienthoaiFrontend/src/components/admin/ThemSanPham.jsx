@@ -130,7 +130,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             type="submit"
             className="rounded bg-green-500 px-4 py-2 text-white hover:bg-blue-600"
           >
-            Lưu
+            Thêm sản phẩm
           </button>
           <button
             type="button"
