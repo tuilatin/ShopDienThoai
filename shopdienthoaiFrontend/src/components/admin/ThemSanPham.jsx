@@ -16,6 +16,20 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
     }
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    // Here you would typically save the productData to your database
+    try {
+      const response = await apiClient.post("/sanpham", formData);
+      console.log("Product added successfully:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error adding product:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     const taiDanhMuc = async () => {
       try {
@@ -47,6 +61,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             <input
               type="text"
               id="tenSanPham"
+              name="tenSanPham"
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             />
           </div>
@@ -57,7 +72,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             >
               Danh mục
               <select
-                name=""
+                name="maDanhMuc"
                 id=""
                 className="rounded border border-slate-300 px-3 py-2 font-normal disabled:bg-slate-100"
               >
@@ -79,6 +94,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             <input
               type="number"
               id="giaBan"
+              name="giaBan"
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             />
           </div>
@@ -92,6 +108,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             <input
               type="number"
               id="soLuongTon"
+              name="soLuongTon"
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             />
           </div>
@@ -105,6 +122,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             <input
               type="file"
               id="hinhAnh"
+              name="hinhAnh"
               accept="image/"
               onChange={handleImageChange}
               className="rounded border border-slate-300 px-3 py-2 font-normal"
@@ -121,6 +139,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             </label>
             <textarea
               id="moTa"
+              name="moTa"
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             ></textarea>
           </div>
@@ -143,24 +162,4 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
       </Form>
     </div>
   );
-}
-
-export async function handleSubmit({ request }) {
-  const productFormData = await request.formData();
-  const productData = {
-    tenSanPham: productFormData.get("tenSanPham"),
-    maDanhMuc: productFormData.get("maDanhMuc"),
-    giaBan: parseFloat(productFormData.get("giaBan")),
-    soLuongTon: parseInt(productFormData.get("soLuongTon"), 10),
-    hinhAnh: productFormData.get("hinhAnh"),
-    moTa: productFormData.get("moTa"),
-  };
-  // Here you would typically save the productData to your database
-  try {
-    const response = await apiClient.post("/sanpham", productData);
-    return response.data;
-  } catch (error) {
-    console.error("Error adding product:", error);
-    throw error;
-  }
 }

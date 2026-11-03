@@ -1,6 +1,5 @@
 import apiClient from "../../api/apiClient";
 import { useEffect, useState } from "react";
-import AddProduct from "./AddProduct";
 import ThemSanPham from "./ThemSanPham";
 
 export default function AdminProducts() {
