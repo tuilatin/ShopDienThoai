@@ -21,7 +21,6 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { addProductAction } from "./components/admin/ThemSanPham";
 
 const routeDenfinitions = createRoutesFromElements(
   <Route path="/" element={<App />}>
