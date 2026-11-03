@@ -31,7 +31,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
   return (
     <div>
       <Form
-        method="post"
+        onSubmit={handleSubmit}
         className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
       >
         <div>Thông tin sản phẩm mới</div>
@@ -145,7 +145,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
   );
 }
 
-export async function addProductAction({ request }) {
+export async function handleSubmit({ request }) {
   const productFormData = await request.formData();
   const productData = {
     tenSanPham: productFormData.get("tenSanPham"),
