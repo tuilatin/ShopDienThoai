@@ -1,32 +1,42 @@
-import React, { use, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import apiClient from "../../api/apiClient";
 import { Form } from "react-router-dom";
 
 export default function ThemSanPham({ onCancel, onProductCreated }) {
   const [danhMucs, setDanhMucs] = useState([]);
-  const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [submitError, setSubmitError] = useState("");
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
 
     if (file) {
-      setImage(file);
       setPreview(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setSubmitError("");
+
+    if (!sessionStorage.getItem("jwtToken")) {
+      setSubmitError("Bạn chưa đăng nhập. Vui lòng đăng nhập lại với tài khoản admin.");
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
-    // Here you would typically save the productData to your database
     try {
-      const response = await apiClient.post("/sanpham", formData);
-      console.log("Product added successfully:", response.data);
-      return response.data;
+      await apiClient.post("/sanpham", formData);
+      onProductCreated();
     } catch (error) {
       console.error("Error adding product:", error);
-      throw error;
+      if (error.response?.status === 401) {
+        setSubmitError("Phiên đăng nhập không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.");
+      } else if (error.response?.status === 403) {
+        setSubmitError("Tài khoản hiện tại không có quyền admin.");
+      } else {
+        setSubmitError("Không thể thêm sản phẩm. Vui lòng thử lại.");
+      }
     }
   };
 
@@ -49,6 +59,11 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
       >
         <div>Thông tin sản phẩm mới</div>
+        {submitError && (
+          <p role="alert" className="mt-2 text-sm text-red-600">
+            {submitError}
+          </p>
+        )}
 
         <div className="flex">
           <div>

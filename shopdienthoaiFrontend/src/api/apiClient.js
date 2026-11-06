@@ -11,9 +11,9 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
-  const jwtToken = sessionStorage.getItem("jwtToken");
+  const jwtToken = sessionStorage.getItem("jwtToken")?.trim();
   if (jwtToken) {
-    config.headers.Authorization = `Bearer ${jwtToken}`;
+    config.headers.set("Authorization", `Bearer ${jwtToken}`);
   }
   return config;
 });
