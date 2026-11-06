@@ -20,23 +20,32 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
     setSubmitError("");
 
     if (!sessionStorage.getItem("jwtToken")) {
-      setSubmitError("Bạn chưa đăng nhập. Vui lòng đăng nhập lại với tài khoản admin.");
+      setSubmitError("Bạn chưa đăng nhập. Vui lòng đăng nhập lại.");
       return;
     }
 
     const formData = new FormData(event.currentTarget);
+
+    const data = {
+      tenSanPham: formData.get("tenSanPham"),
+      maDanhMuc: formData.get("maDanhMuc"),
+      giaBan: Number(formData.get("giaBan")),
+      soLuongTon: Number(formData.get("soLuongTon")),
+      hinhAnh: formData.get("hinhAnh"),
+      moTa: formData.get("moTa"),
+      ngayTao: new Date().toISOString(),
+    };
+
     try {
-      await apiClient.post("/sanpham", formData);
+      await apiClient.post("/sanpham", data);
       onProductCreated();
     } catch (error) {
       console.error("Error adding product:", error);
-      if (error.response?.status === 401) {
-        setSubmitError("Phiên đăng nhập không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.");
-      } else if (error.response?.status === 403) {
-        setSubmitError("Tài khoản hiện tại không có quyền admin.");
-      } else {
-        setSubmitError("Không thể thêm sản phẩm. Vui lòng thử lại.");
-      }
+
+      setSubmitError(
+        error.response?.data?.message ||
+          "Không thể thêm sản phẩm. Vui lòng thử lại.",
+      );
     }
   };
 

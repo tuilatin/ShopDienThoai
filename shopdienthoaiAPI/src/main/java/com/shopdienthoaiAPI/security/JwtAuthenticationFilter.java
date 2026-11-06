@@ -35,8 +35,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         authHeader = authHeader.substring(7);
      try {
             String username = jwtService.validateToken(authHeader);
+         log.info("Username từ JWT: {}", username);
             if (username != null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                log.info("Authorities: {}", userDetails.getAuthorities());
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken
                         (username, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth);
