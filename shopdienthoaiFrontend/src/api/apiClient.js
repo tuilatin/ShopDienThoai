@@ -10,4 +10,12 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
+apiClient.interceptors.request.use((config) => {
+  const jwtToken = sessionStorage.getItem("jwtToken");
+  if (jwtToken) {
+    config.headers.Authorization = `Bearer ${jwtToken}`;
+  }
+  return config;
+});
+
 export default apiClient;
