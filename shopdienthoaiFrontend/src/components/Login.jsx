@@ -91,6 +91,7 @@ export async function loginAction({ request }) {
     const { jwtToken, vaiTro } = response.data;
     sessionStorage.setItem("jwtToken", jwtToken);
     sessionStorage.setItem("vaiTro", vaiTro);
+    window.dispatchEvent(new Event("authChanged"));
     return redirect(vaiTro === "ADMIN" ? "/admin" : "/"); // Redirect based on user role
   } catch (error) {
     return { success: false, message: error.response.data.message };

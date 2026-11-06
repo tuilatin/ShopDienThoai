@@ -1,10 +1,15 @@
 import { ShoppingCart, Smartphone } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useNavigate } from "react";
 import { getGuestCart } from "../lib/cartStorage";
 
 export default function Header() {
   const [cartCount, setCartCount] = useState(() => getGuestCart().length);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    () => !!sessionStorage.getItem("jwtToken"),
+  );
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     function updateCartCount() {
@@ -14,6 +19,15 @@ export default function Header() {
     window.addEventListener("guestCartUpdated", updateCartCount);
     return () =>
       window.removeEventListener("guestCartUpdated", updateCartCount);
+  }, []);
+
+  useEffect(() => {
+    const updateLoginStatus = () => {
+      setIsLoggedIn(Boolean(sessionStorage.getItem("jwtToken")));
+    };
+
+    window.addEventListener("authChanged", updateLoginStatus);
+    return () => window.removeEventListener("authChanged", updateLoginStatus);
   }, []);
 
   return (
@@ -42,12 +56,27 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <Link
-            to="/login"
-            className="rounded-full border border-[#e5e6e9] px-4 py-2 text-sm font-semibold transition hover:border-[#17191d] hover:bg-[#17191d] hover:text-white sm:px-5"
-          >
-            Đăng nhập
-          </Link>
+          {isLoggedIn ? (
+            <button
+              type="button"
+              onClick={() => {
+                sessionStorage.removeItem("jwtToken");
+                sessionStorage.removeItem("vaiTro");
+                setIsLoggedIn(false);
+                navigate("/");
+              }}
+              className="rounded-full border border-[#e5e6e9] px-4 py-2 text-sm font-semibold"
+            >
+              Đăng xuất
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="rounded-full border border-[#e5e6e9] px-4 py-2 text-sm font-semibold"
+            >
+              Đăng nhập
+            </Link>
+          )}
 
           {/* <a
             href="#san-pham"
