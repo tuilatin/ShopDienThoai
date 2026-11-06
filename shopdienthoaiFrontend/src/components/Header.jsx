@@ -1,6 +1,6 @@
 import { ShoppingCart, Smartphone } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useEffect, useState, useNavigate } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { getGuestCart } from "../lib/cartStorage";
 
 export default function Header() {
