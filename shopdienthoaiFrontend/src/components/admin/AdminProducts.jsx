@@ -1,7 +1,66 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import apiClient from "../../api/apiClient";
 import SuaSanPham from "./SuaSanPham";
 import ThemSanPham from "./ThemSanPham";
+
+const DEFAULT_PAGE_SIZE = 5;
+const ALLOWED_PAGE_SIZES = new Set([5, 10, 20]);
+
+function ProductSearchForm({ search, categories, onSearch, onClear }) {
+  const [searchName, setSearchName] = useState(search.tenSanPham);
+  const [searchCategory, setSearchCategory] = useState(search.maDanhMuc);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSearch(searchName.trim(), searchCategory);
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="mb-4 grid gap-3 rounded-lg border border-slate-200 bg-white p-4 sm:grid-cols-[1fr_1fr_auto_auto]"
+    >
+      <label className="flex flex-col gap-1 text-sm font-medium">
+        Tìm theo tên
+        <input
+          value={searchName}
+          onChange={(event) => setSearchName(event.target.value)}
+          placeholder="Nhập tên sản phẩm"
+          className="rounded border border-slate-300 px-3 py-2 font-normal"
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm font-medium">
+        Danh mục
+        <select
+          value={searchCategory}
+          onChange={(event) => setSearchCategory(event.target.value)}
+          className="rounded border border-slate-300 px-3 py-2 font-normal"
+        >
+          <option value="">Tất cả danh mục</option>
+          {categories.map((danhMuc) => (
+            <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
+              {danhMuc.tenDanhMuc}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button
+        type="submit"
+        className="self-end rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+      >
+        Tìm kiếm
+      </button>
+      <button
+        type="button"
+        onClick={onClear}
+        className="self-end rounded border border-slate-300 px-4 py-2 hover:bg-slate-50"
+      >
+        Xóa lọc
+      </button>
+    </form>
+  );
+}
 
 function getPaginationItems(totalPages, currentPage) {
   const visiblePages = new Set([0, totalPages - 1]);
@@ -25,18 +84,11 @@ function getPaginationItems(totalPages, currentPage) {
 }
 
 export default function AdminProducts() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [sanPhams, setSanPhams] = useState([]);
   const [danhMucs, setDanhMucs] = useState([]);
   const [isAddProduct, setIsAddProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [searchName, setSearchName] = useState("");
-  const [searchCategory, setSearchCategory] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState({
-    tenSanPham: "",
-    maDanhMuc: "",
-  });
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
   const [pageInfo, setPageInfo] = useState({
     totalPages: 0,
     totalElements: 0,
@@ -47,6 +99,19 @@ export default function AdminProducts() {
   const [isLoading, setIsLoading] = useState(true);
   const [deletingProduct, setDeletingProduct] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const parsedPage = Number.parseInt(searchParams.get("page") ?? "0", 10);
+  const page = Number.isInteger(parsedPage) && parsedPage >= 0 ? parsedPage : 0;
+  const parsedPageSize = Number.parseInt(
+    searchParams.get("size") ?? String(DEFAULT_PAGE_SIZE),
+    10,
+  );
+  const pageSize = ALLOWED_PAGE_SIZES.has(parsedPageSize)
+    ? parsedPageSize
+    : DEFAULT_PAGE_SIZE;
+  const appliedSearch = {
+    tenSanPham: searchParams.get("tenSanPham") ?? "",
+    maDanhMuc: searchParams.get("maDanhMuc") ?? "",
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -84,9 +149,16 @@ export default function AdminProducts() {
       })
       .then((response) => {
         if (isMounted) {
+          const totalPages = response.data.totalPages ?? 0;
+          if (page >= Math.max(totalPages, 1)) {
+            const lastValidPage = Math.max(totalPages - 1, 0);
+            const nextParams = new URLSearchParams(searchParams);
+            nextParams.set("page", String(lastValidPage));
+            setSearchParams(nextParams, { replace: true });
+          }
           setSanPhams(response.data.content ?? []);
           setPageInfo({
-            totalPages: response.data.totalPages ?? 0,
+            totalPages,
             totalElements: response.data.totalElements ?? 0,
             first: response.data.first ?? true,
             last: response.data.last ?? true,
@@ -108,26 +180,39 @@ export default function AdminProducts() {
     return () => {
       isMounted = false;
     };
-  }, [appliedSearch, page, pageSize, refreshKey]);
+  }, [
+    appliedSearch.maDanhMuc,
+    appliedSearch.tenSanPham,
+    page,
+    pageSize,
+    refreshKey,
+    searchParams,
+    setSearchParams,
+  ]);
 
-  const handleSearch = (event) => {
-    event.preventDefault();
+  const updateSearchParams = (name, category) => {
     setIsLoading(true);
     setErrorMessage("");
-    setPage(0);
-    setAppliedSearch({
-      tenSanPham: searchName.trim(),
-      maDanhMuc: searchCategory,
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      if (name) {
+        nextParams.set("tenSanPham", name);
+      } else {
+        nextParams.delete("tenSanPham");
+      }
+      if (category) {
+        nextParams.set("maDanhMuc", category);
+      } else {
+        nextParams.delete("maDanhMuc");
+      }
+      nextParams.set("page", "0");
+      nextParams.set("size", String(pageSize));
+      return nextParams;
     });
   };
 
   const handleClearSearch = () => {
-    setIsLoading(true);
-    setErrorMessage("");
-    setSearchName("");
-    setSearchCategory("");
-    setPage(0);
-    setAppliedSearch({ tenSanPham: "", maDanhMuc: "" });
+    updateSearchParams("", "");
   };
 
   const refreshProducts = () => {
@@ -139,7 +224,55 @@ export default function AdminProducts() {
   const handlePageChange = (nextPage) => {
     setIsLoading(true);
     setErrorMessage("");
-    setPage(nextPage);
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      nextParams.set("page", String(nextPage));
+      nextParams.set("size", String(pageSize));
+      return nextParams;
+    });
+  };
+
+  const handlePageSizeChange = (nextPageSize) => {
+    setIsLoading(true);
+    setErrorMessage("");
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      nextParams.set("page", "0");
+      nextParams.set("size", String(nextPageSize));
+      return nextParams;
+    });
+  };
+
+  useEffect(() => {
+    const invalidPage =
+      searchParams.has("page") &&
+      String(page) !== searchParams.get("page");
+    const invalidPageSize =
+      searchParams.has("size") &&
+      String(pageSize) !== searchParams.get("size");
+    if (invalidPage || invalidPageSize) {
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.set("page", String(page));
+      nextParams.set("size", String(pageSize));
+      setSearchParams(nextParams, { replace: true });
+    }
+  }, [page, pageSize, searchParams, setSearchParams]);
+
+  const handleProductCreated = () => {
+    setIsAddProduct(false);
+    setIsLoading(true);
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      nextParams.set("page", "0");
+      nextParams.set("size", String(pageSize));
+      return nextParams;
+    });
+    refreshProducts();
+  };
+
+  const handleProductUpdated = () => {
+    setEditingProduct(null);
+    refreshProducts();
   };
 
   const handleDelete = async (sanPham) => {
@@ -156,7 +289,7 @@ export default function AdminProducts() {
       await apiClient.delete(`/sanpham/${sanPham.maSanPham}`);
       if (sanPhams.length === 1 && page > 0) {
         setIsLoading(true);
-        setPage((currentPage) => currentPage - 1);
+        handlePageChange(page - 1);
       } else {
         refreshProducts();
       }
@@ -172,17 +305,6 @@ export default function AdminProducts() {
     }
   };
 
-  const handleProductCreated = () => {
-    setIsAddProduct(false);
-    setPage(0);
-    refreshProducts();
-  };
-
-  const handleProductUpdated = () => {
-    setEditingProduct(null);
-    refreshProducts();
-  };
-
   return (
     <div>
       <h1 className="mb-4 text-2xl font-bold">Quản lý sản phẩm</h1>
@@ -196,48 +318,13 @@ export default function AdminProducts() {
         </p>
       )}
 
-      <form
-        onSubmit={handleSearch}
-        className="mb-4 grid gap-3 rounded-lg border border-slate-200 bg-white p-4 sm:grid-cols-[1fr_1fr_auto_auto]"
-      >
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          Tìm theo tên
-          <input
-            value={searchName}
-            onChange={(event) => setSearchName(event.target.value)}
-            placeholder="Nhập tên sản phẩm"
-            className="rounded border border-slate-300 px-3 py-2 font-normal"
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          Danh mục
-          <select
-            value={searchCategory}
-            onChange={(event) => setSearchCategory(event.target.value)}
-            className="rounded border border-slate-300 px-3 py-2 font-normal"
-          >
-            <option value="">Tất cả danh mục</option>
-            {danhMucs.map((danhMuc) => (
-              <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
-                {danhMuc.tenDanhMuc}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button
-          type="submit"
-          className="self-end rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-        >
-          Tìm kiếm
-        </button>
-        <button
-          type="button"
-          onClick={handleClearSearch}
-          className="self-end rounded border border-slate-300 px-4 py-2 hover:bg-slate-50"
-        >
-          Xóa lọc
-        </button>
-      </form>
+      <ProductSearchForm
+        key={searchParams.toString()}
+        search={appliedSearch}
+        categories={danhMucs}
+        onSearch={updateSearchParams}
+        onClear={handleClearSearch}
+      />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <button
@@ -256,10 +343,7 @@ export default function AdminProducts() {
           <select
             value={pageSize}
             onChange={(event) => {
-              setIsLoading(true);
-              setErrorMessage("");
-              setPageSize(Number(event.target.value));
-              setPage(0);
+              handlePageSizeChange(Number(event.target.value));
             }}
             className="rounded border border-slate-300 px-2 py-1"
           >

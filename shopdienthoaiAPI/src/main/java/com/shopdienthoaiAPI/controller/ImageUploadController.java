@@ -3,13 +3,18 @@ package com.shopdienthoaiAPI.controller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import com.shopdienthoaiAPI.repository.SanPhamRepository;
+import com.shopdienthoaiAPI.service.ProductImageStorageService;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -35,13 +40,21 @@ public class ImageUploadController {
     );
 
     private final Path uploadDirectory;
+    private final SanPhamRepository sanPhamRepository;
+    private final ProductImageStorageService imageStorageService;
 
-    public ImageUploadController(@Value("${app.upload-dir:uploads}") String uploadDirectory) {
+    public ImageUploadController(
+            @Value("${app.upload-dir:uploads}") String uploadDirectory,
+            SanPhamRepository sanPhamRepository,
+            ProductImageStorageService imageStorageService
+    ) {
         this.uploadDirectory = Paths.get(uploadDirectory)
                 .toAbsolutePath()
                 .normalize()
                 .resolve("products")
                 .normalize();
+        this.sanPhamRepository = sanPhamRepository;
+        this.imageStorageService = imageStorageService;
     }
 
     @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -96,6 +109,33 @@ public class ImageUploadController {
                 .path(fileName)
                 .toUriString();
         return new ImageUploadResponse(imageUrl);
+    }
+
+    @DeleteMapping("/upload-image")
+    public ResponseEntity<Void> deleteUnreferencedImage(@RequestParam String url) {
+        if (!imageStorageService.isManagedImage(url)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Đường dẫn ảnh tải lên không hợp lệ."
+            );
+        }
+        String imageSuffix = imageStorageService.getImagePathSuffix(url);
+        if (sanPhamRepository.existsByHinhAnhEndingWith(imageSuffix)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Ảnh đang được sản phẩm sử dụng."
+            );
+        }
+        try {
+            imageStorageService.deleteManagedImage(url);
+        } catch (IOException exception) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Không thể xóa ảnh tải lên.",
+                    exception
+            );
+        }
+        return ResponseEntity.noContent().build();
     }
 
     private void validateImage(MultipartFile file, ImageFormat expectedFormat) throws IOException {

@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
     Optional<TaiKhoan> findTopByOrderByMaTaiKhoanDesc();
     TaiKhoan findTaiKhoanByTenDangNhap(@Size(max = 50) @NotNull String tenDangNhap);
+    boolean existsByTenDangNhap(String tenDangNhap);
 }

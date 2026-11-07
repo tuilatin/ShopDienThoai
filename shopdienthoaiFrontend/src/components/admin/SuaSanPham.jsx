@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
+import { deleteUnattachedProductImage } from "../../api/productImage";
 
 export default function SuaSanPham({
   sanPham,
@@ -72,6 +73,7 @@ export default function SuaSanPham({
     }
 
     setIsSubmitting(true);
+    let uploadedImageUrl = null;
 
     try {
       let imageUrl = hinhAnh;
@@ -83,6 +85,7 @@ export default function SuaSanPham({
           uploadData,
         );
         imageUrl = uploadResponse.data.url;
+        uploadedImageUrl = imageUrl;
       }
 
       await apiClient.put(`/sanpham/${sanPham.maSanPham}`, {
@@ -93,9 +96,17 @@ export default function SuaSanPham({
         hinhAnh: imageUrl || null,
         moTa: moTa.trim(),
       });
+      uploadedImageUrl = null;
       onProductUpdated();
     } catch (error) {
       console.error("Lỗi cập nhật sản phẩm:", error);
+      if (uploadedImageUrl) {
+        try {
+          await deleteUnattachedProductImage(uploadedImageUrl);
+        } catch (cleanupError) {
+          console.error("Không thể dọn ảnh tải lên chưa được sử dụng:", cleanupError);
+        }
+      }
       setErrorMessage(
         error.response?.data?.detail ||
           error.response?.data?.message ||

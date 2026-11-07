@@ -1,4 +1,3 @@
-import apiClient from "../api/apiClient";
 import { Form, useActionData } from "react-router-dom";
 
 const labelStyle =
@@ -17,7 +16,7 @@ export default function Register() {
 
       {actionData?.errors && (
         <p className="mb-4 text-sm font-medium text-red-600">
-          Đăng ký thất bại. Tên đăng nhập có thể đã tồn tại.
+          {actionData.errors}
         </p>
       )}
 
@@ -34,6 +33,8 @@ export default function Register() {
             placeholder="Your Username"
             autoComplete="username"
             required
+            minLength={3}
+            maxLength={50}
             className={textFieldStyle}
           />
         </div>
@@ -50,7 +51,7 @@ export default function Register() {
             placeholder="Your Password"
             autoComplete="current-password"
             required
-            minLength={4}
+            minLength={8}
             maxLength={20}
             className={textFieldStyle}
           />
@@ -67,8 +68,40 @@ export default function Register() {
             placeholder="Confirm Password"
             autoComplete="current-password"
             required
-            minLength={4}
+            minLength={8}
             maxLength={20}
+            className={textFieldStyle}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="tenKhachHang" className={labelStyle}>
+            Họ và tên
+          </label>
+          <input
+            id="tenKhachHang"
+            type="text"
+            name="tenKhachHang"
+            autoComplete="name"
+            required
+            maxLength={100}
+            className={textFieldStyle}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="soDienThoai" className={labelStyle}>
+            Số điện thoại
+          </label>
+          <input
+            id="soDienThoai"
+            type="tel"
+            name="soDienThoai"
+            autoComplete="tel"
+            required
+            minLength={8}
+            maxLength={20}
+            pattern="[0-9+()\-\s]{8,20}"
             className={textFieldStyle}
           />
         </div>
@@ -82,21 +115,4 @@ export default function Register() {
       </div>
     </Form>
   );
-}
-
-export async function registerAction({ request }) {
-  const data = await request.formData();
-  const registerData = {
-    username: data.get("username"),
-    password: data.get("password"),
-  };
-  try {
-    const response = await apiClient.post("/auth/dangky", registerData);
-    return { success: true };
-  } catch (error) {
-    return {
-      success: false,
-      errors: error.response?.data?.errorMessage,
-    };
-  }
 }

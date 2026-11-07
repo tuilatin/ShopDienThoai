@@ -6,20 +6,28 @@ import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.repository.DanhMucRepository;
 import com.shopdienthoaiAPI.repository.SanPhamRepository;
 import com.shopdienthoaiAPI.service.ISanPhamService;
+import com.shopdienthoaiAPI.service.ProductImageStorageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.time.Instant;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SanPhamServiceImpl implements ISanPhamService {
     private final SanPhamRepository sanPhamRepository;
     private final DanhMucRepository danhMucRepository;
+    private final ProductImageStorageService imageStorageService;
 
 
     public Page<SanPhamDto.Response> convertToPageSanPhamResponse(Page<SanPham> sanPhams){
@@ -67,6 +75,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
     }
 
     @Override
+    @Transactional
     public void themSampham(SanPhamDto.Request sanPhamDto) {
         DanhMuc danhMuc = timDanhMuc(sanPhamDto.maDanhMuc());
         SanPham sanPham = new SanPham();
@@ -78,13 +87,20 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPham.setHinhAnh (sanPhamDto.hinhAnh());
         sanPham.setMoTa (sanPhamDto.moTa());
         sanPham.setNgayTao (Instant.now());
-        sanPhamRepository.save(sanPham);
+        try {
+            sanPhamRepository.saveAndFlush(sanPham);
+        } catch (RuntimeException exception) {
+            cleanupAfterFailedCreate(sanPhamDto.hinhAnh(), exception);
+            throw exception;
+        }
     }
 
     @Override
+    @Transactional
     public SanPhamDto.Response suaSanPham(String maSanPham,SanPhamDto.Request sanPhamDto) {
         DanhMuc danhMuc = timDanhMuc(sanPhamDto.maDanhMuc());
         SanPham sanPham = timSanPham(maSanPham);
+        String oldImageUrl = sanPham.getHinhAnh();
         sanPham.setMaSanPham (maSanPham);
         sanPham.setTenSanPham (sanPhamDto.tenSanPham());
         sanPham.setDanhMuc(danhMuc);
@@ -92,13 +108,20 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPham.setSoLuongTon(sanPhamDto.soLuongTon());
         sanPham.setHinhAnh(sanPhamDto.hinhAnh());
         sanPham.setMoTa (sanPhamDto.moTa());
-        SanPham sanPhamDaLuu = sanPhamRepository.save(sanPham);
+        SanPham sanPhamDaLuu = sanPhamRepository.saveAndFlush(sanPham);
+        if (!java.util.Objects.equals(oldImageUrl, sanPhamDaLuu.getHinhAnh())) {
+            deleteImageAfterCommit(oldImageUrl);
+        }
         return convertToSanPhamDto(sanPhamDaLuu);
     }
 
     @Override
+    @Transactional
     public void xoaSanPham(String maSanPham) {
-        sanPhamRepository.delete(timSanPham(maSanPham));
+        SanPham sanPham = timSanPham(maSanPham);
+        String imageUrl = sanPham.getHinhAnh();
+        sanPhamRepository.delete(sanPham);
+        deleteImageAfterCommit(imageUrl);
     }
 
     private SanPham timSanPham(String maSanPham) {
@@ -117,4 +140,47 @@ public class SanPhamServiceImpl implements ISanPhamService {
                         HttpStatus.BAD_REQUEST, "Không tìm thấy danh mục."));
     }
 
+    private void cleanupAfterFailedCreate(String imageUrl, RuntimeException originalException) {
+        try {
+            String imageSuffix = imageStorageService.getImagePathSuffix(imageUrl);
+            if (imageSuffix != null
+                    && !sanPhamRepository.existsByHinhAnhEndingWith(imageSuffix)) {
+                imageStorageService.deleteManagedImage(imageUrl);
+            }
+        } catch (IOException | RuntimeException cleanupException) {
+            originalException.addSuppressed(cleanupException);
+            log.error("Không thể dọn ảnh sau khi tạo sản phẩm thất bại: {}", imageUrl, cleanupException);
+        }
+    }
+
+    private void deleteImageAfterCommit(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return;
+        }
+
+        Runnable cleanup = () -> {
+            try {
+                String imageSuffix = imageStorageService.getImagePathSuffix(imageUrl);
+                if (imageSuffix != null
+                        && !sanPhamRepository.existsByHinhAnhEndingWith(imageSuffix)) {
+                    imageStorageService.deleteManagedImage(imageUrl);
+                }
+            } catch (IOException | RuntimeException exception) {
+                log.error("Không thể dọn ảnh sản phẩm: {}", imageUrl, exception);
+            }
+        };
+
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(
+                    new TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            cleanup.run();
+                        }
+                    }
+            );
+        } else {
+            cleanup.run();
+        }
+    }
 }

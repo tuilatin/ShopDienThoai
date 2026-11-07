@@ -18,6 +18,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
     Optional<SanPham> findTopByOrderByMaSanPhamDesc();
     Optional<SanPham> findByMaSanPham(String maSanPham);
     SanPham findSanPhamsByMaSanPham(@Size(max = 5) String maSanPham);
+    boolean existsByHinhAnhEndingWith(String imagePathSuffix);
 
     @Query("""
         select sp from SanPham sp

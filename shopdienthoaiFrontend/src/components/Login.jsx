@@ -1,6 +1,4 @@
-import { Form, Link, redirect } from "react-router-dom";
-import { useActionData } from "react-router-dom";
-import apiClient from "../api/apiClient";
+import { Form, Link, useActionData } from "react-router-dom";
 
 const labelStyle =
   "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
@@ -35,6 +33,7 @@ export default function Login() {
             placeholder="Your Username"
             autoComplete="username"
             required
+            maxLength={50}
             className={textFieldStyle}
           />
         </div>
@@ -77,23 +76,4 @@ export default function Login() {
       </Link>
     </>
   );
-}
-
-export async function loginAction({ request }) {
-  const loginFormData = await request.formData();
-  const loginData = {
-    username: loginFormData.get("username"),
-    password: loginFormData.get("password"),
-  };
-
-  try {
-    const response = await apiClient.post("/auth/dangnhap", loginData);
-    const { jwtToken, vaiTro } = response.data;
-    sessionStorage.setItem("jwtToken", jwtToken);
-    sessionStorage.setItem("vaiTro", vaiTro);
-    window.dispatchEvent(new Event("authChanged"));
-    return redirect(vaiTro === "ADMIN" ? "/admin" : "/"); // Redirect based on user role
-  } catch (error) {
-    return { success: false, message: error.response.data.message };
-  }
 }

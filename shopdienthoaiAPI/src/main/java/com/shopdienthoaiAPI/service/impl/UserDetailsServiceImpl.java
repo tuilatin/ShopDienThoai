@@ -29,6 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return User.withUsername(taiKhoan.getTenDangNhap())
                 .password(taiKhoan.getMatKhauHash())
                 .authorities("ROLE_" + taiKhoan.getVaiTro())
+                .disabled(!"ACTIVE".equalsIgnoreCase(taiKhoan.getTrangThai()))
                 .build();
     }
 }

@@ -3,6 +3,7 @@ package com.shopdienthoaiAPI.controller;
 import com.shopdienthoaiAPI.dto.SanPhamDto;
 import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.service.ISanPhamService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -50,12 +51,12 @@ public class SanPhamController {
     }
 
     @PostMapping
-    public void themSampham(@RequestBody SanPhamDto.Request sanPhamDto) {
+    public void themSampham(@Valid @RequestBody SanPhamDto.Request sanPhamDto) {
         sanPhamService.themSampham(sanPhamDto);
     }
 
     @PutMapping("/{maSanPham}")
-    public ResponseEntity<SanPhamDto.Response> suaSanPham(@PathVariable String maSanPham, @RequestBody SanPhamDto.Request sanPhamDto) {
+    public ResponseEntity<SanPhamDto.Response> suaSanPham(@PathVariable String maSanPham, @Valid @RequestBody SanPhamDto.Request sanPhamDto) {
         SanPhamDto.Response data = sanPhamService.suaSanPham( maSanPham, sanPhamDto);
         return ResponseEntity.ok(data);
     }

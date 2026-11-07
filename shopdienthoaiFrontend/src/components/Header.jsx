@@ -57,18 +57,26 @@ export default function Header() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           {isLoggedIn ? (
-            <button
-              type="button"
-              onClick={() => {
-                sessionStorage.removeItem("jwtToken");
-                sessionStorage.removeItem("vaiTro");
-                setIsLoggedIn(false);
-                navigate("/");
-              }}
-              className="rounded-full border border-[#e5e6e9] px-4 py-2 text-sm font-semibold"
-            >
-              Đăng xuất
-            </button>
+            <>
+              <Link
+                to="/profile"
+                className="rounded-full border border-[#e5e6e9] px-4 py-2 text-sm font-semibold"
+              >
+                Tài khoản
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  sessionStorage.removeItem("jwtToken");
+                  sessionStorage.removeItem("vaiTro");
+                  window.dispatchEvent(new Event("authChanged"));
+                  navigate("/");
+                }}
+                className="rounded-full border border-[#e5e6e9] px-4 py-2 text-sm font-semibold"
+              >
+                Đăng xuất
+              </button>
+            </>
           ) : (
             <Link
               to="/login"

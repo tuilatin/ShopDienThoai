@@ -7,12 +7,13 @@ import Home from "./components/Home.jsx";
 import Cart from "./components/Cart.jsx";
 import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
-import { registerAction } from "./components/Register.jsx";
-import { loginAction } from "./components/Login.jsx";
+import { loginAction, registerAction } from "./components/authActions.js";
 import ErrorPage from "./components/ErrorPage.jsx";
 import ProductDetail from "./components/ProductDetail.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
 import RequireAdmin from "./components/RequireAdmin.jsx";
+import RequireAuth from "./components/RequireAuth.jsx";
+import Profile from "./components/Profile.jsx";
 import AdminProducts from "./components/admin/AdminProducts.jsx";
 
 import {
@@ -34,6 +35,9 @@ const routeDenfinitions = createRoutesFromElements(
     />
     <Route path="/cart" element={<Cart />} />
     <Route path="/chitietsanpham/:maSanPham" element={<ProductDetail />} />
+    <Route element={<RequireAuth />}>
+      <Route path="/profile" element={<Profile />} />
+    </Route>
     <Route element={<RequireAdmin />}>
       <Route path="/admin" element={<AdminLayout />}>
         <Route path="products" element={<AdminProducts />} />

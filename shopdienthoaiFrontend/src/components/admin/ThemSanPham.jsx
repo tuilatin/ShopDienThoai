@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import apiClient from "../../api/apiClient";
+import { deleteUnattachedProductImage } from "../../api/productImage";
 
 export default function ThemSanPham({ onCancel, onProductCreated }) {
   const [danhMucs, setDanhMucs] = useState([]);
@@ -40,9 +41,9 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
 
     setIsSubmitting(true);
     const formData = new FormData(event.currentTarget);
+    let uploadedImageUrl = null;
 
     try {
-      let imageUrl = null;
       if (imageFile) {
         const uploadData = new FormData();
         uploadData.append("file", imageFile);
@@ -50,7 +51,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
           "/sanpham/upload-image",
           uploadData,
         );
-        imageUrl = uploadResponse.data.url;
+        uploadedImageUrl = uploadResponse.data.url;
       }
 
       const data = {
@@ -58,14 +59,22 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         maDanhMuc: formData.get("maDanhMuc"),
         giaBan: Number(formData.get("giaBan")),
         soLuongTon: Number(formData.get("soLuongTon")),
-        hinhAnh: imageUrl,
+        hinhAnh: uploadedImageUrl,
         moTa: formData.get("moTa"),
       };
 
       await apiClient.post("/sanpham", data);
+      uploadedImageUrl = null;
       onProductCreated();
     } catch (error) {
       console.error("Error adding product:", error);
+      if (uploadedImageUrl) {
+        try {
+          await deleteUnattachedProductImage(uploadedImageUrl);
+        } catch (cleanupError) {
+          console.error("Không thể dọn ảnh tải lên chưa được sử dụng:", cleanupError);
+        }
+      }
 
       setSubmitError(
         error.response?.data?.detail ||
