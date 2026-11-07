@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import apiClient from "../../api/apiClient";
-import { Form } from "react-router-dom";
 
 export default function ThemSanPham({ onCancel, onProductCreated }) {
   const [danhMucs, setDanhMucs] = useState([]);
@@ -92,7 +91,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
 
   return (
     <div>
-      <Form
+      <form
         onSubmit={handleSubmit}
         className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
       >
@@ -222,7 +221,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             Hủy
           </button>
         </div>
-      </Form>
+      </form>
     </div>
   );
 }
