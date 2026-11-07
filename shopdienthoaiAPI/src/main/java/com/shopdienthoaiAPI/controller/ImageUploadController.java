@@ -53,7 +53,8 @@ public class ImageUploadController {
             throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE, "Ảnh không được vượt quá 5 MB.");
         }
 
-        ImageFormat format = ALLOWED_FORMATS.get(file.getContentType());
+        String contentType = file.getContentType();
+        ImageFormat format = contentType == null ? null : ALLOWED_FORMATS.get(contentType);
         if (format == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -63,22 +64,25 @@ public class ImageUploadController {
 
         try {
             validateImage(file, format);
-            Files.createDirectories(uploadDirectory);
-            String fileName = UUID.randomUUID() + "." + format.extension();
-            Path destination = uploadDirectory.resolve(fileName).normalize();
-            if (!destination.startsWith(uploadDirectory)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tên file ảnh không hợp lệ.");
-            }
+        } catch (IOException exception) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "File tải lên không phải ảnh hợp lệ.",
+                    exception
+            );
+        }
 
+        String fileName = UUID.randomUUID() + "." + format.extension();
+        Path destination = uploadDirectory.resolve(fileName).normalize();
+        if (!destination.startsWith(uploadDirectory)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tên file ảnh không hợp lệ.");
+        }
+
+        try {
+            Files.createDirectories(uploadDirectory);
             try (var inputStream = file.getInputStream()) {
                 Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
             }
-
-            String imageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/uploads/products/")
-                    .path(fileName)
-                    .toUriString();
-            return new ImageUploadResponse(imageUrl);
         } catch (IOException exception) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -86,10 +90,17 @@ public class ImageUploadController {
                     exception
             );
         }
+
+        String imageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/uploads/products/")
+                .path(fileName)
+                .toUriString();
+        return new ImageUploadResponse(imageUrl);
     }
 
     private void validateImage(MultipartFile file, ImageFormat expectedFormat) throws IOException {
-        try (ImageInputStream imageInput = ImageIO.createImageInputStream(file.getInputStream())) {
+        try (var inputStream = file.getInputStream();
+             ImageInputStream imageInput = ImageIO.createImageInputStream(inputStream)) {
             if (imageInput == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File tải lên không phải ảnh hợp lệ.");
             }

@@ -69,7 +69,8 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
       console.error("Error adding product:", error);
 
       setSubmitError(
-        error.response?.data?.message ||
+        error.response?.data?.detail ||
+          error.response?.data?.message ||
           "Không thể thêm sản phẩm. Vui lòng thử lại.",
       );
     } finally {
