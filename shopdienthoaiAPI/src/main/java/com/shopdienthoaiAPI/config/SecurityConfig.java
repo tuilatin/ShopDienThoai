@@ -43,6 +43,8 @@ public class SecurityConfig {
                 "/swagger-ui/**",
                 "/v3/api-docs/**"
             ).permitAll()
+            .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/v1/sanpham/upload-image").hasRole("ADMIN")
             .requestMatchers(HttpMethod.POST, "/api/v1/sanpham").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/sanpham/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/sanpham/**").hasRole("ADMIN")

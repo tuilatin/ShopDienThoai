@@ -5,15 +5,25 @@ import { Form } from "react-router-dom";
 export default function ThemSanPham({ onCancel, onProductCreated }) {
   const [danhMucs, setDanhMucs] = useState([]);
   const [preview, setPreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleImageChange = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files?.[0] ?? null;
+    setImageFile(file);
+    setSubmitError("");
 
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
+    setPreview(file ? URL.createObjectURL(file) : null);
   };
+
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,19 +34,35 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
       return;
     }
 
+    if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+      setSubmitError("Ảnh không được vượt quá 5 MB.");
+      return;
+    }
+
+    setIsSubmitting(true);
     const formData = new FormData(event.currentTarget);
 
-    const data = {
-      tenSanPham: formData.get("tenSanPham"),
-      maDanhMuc: formData.get("maDanhMuc"),
-      giaBan: Number(formData.get("giaBan")),
-      soLuongTon: Number(formData.get("soLuongTon")),
-      hinhAnh: formData.get("hinhAnh"),
-      moTa: formData.get("moTa"),
-      ngayTao: new Date().toISOString(),
-    };
-
     try {
+      let imageUrl = null;
+      if (imageFile) {
+        const uploadData = new FormData();
+        uploadData.append("file", imageFile);
+        const uploadResponse = await apiClient.post(
+          "/sanpham/upload-image",
+          uploadData,
+        );
+        imageUrl = uploadResponse.data.url;
+      }
+
+      const data = {
+        tenSanPham: formData.get("tenSanPham"),
+        maDanhMuc: formData.get("maDanhMuc"),
+        giaBan: Number(formData.get("giaBan")),
+        soLuongTon: Number(formData.get("soLuongTon")),
+        hinhAnh: imageUrl,
+        moTa: formData.get("moTa"),
+      };
+
       await apiClient.post("/sanpham", data);
       onProductCreated();
     } catch (error) {
@@ -46,6 +72,8 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         error.response?.data?.message ||
           "Không thể thêm sản phẩm. Vui lòng thử lại.",
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -86,6 +114,8 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
               type="text"
               id="tenSanPham"
               name="tenSanPham"
+              required
+              maxLength={150}
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             />
           </div>
@@ -97,9 +127,11 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
               Danh mục
               <select
                 name="maDanhMuc"
-                id=""
+                id="maDanhMuc"
+                required
                 className="rounded border border-slate-300 px-3 py-2 font-normal disabled:bg-slate-100"
               >
+                <option value="">Chọn danh mục</option>
                 {danhMucs.map((danhMuc) => (
                   <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
                     {danhMuc.tenDanhMuc}
@@ -119,6 +151,9 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
               type="number"
               id="giaBan"
               name="giaBan"
+              min="1"
+              step="0.01"
+              required
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             />
           </div>
@@ -133,6 +168,9 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
               type="number"
               id="soLuongTon"
               name="soLuongTon"
+              min="0"
+              step="1"
+              required
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             />
           </div>
@@ -146,8 +184,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             <input
               type="file"
               id="hinhAnh"
-              name="hinhAnh"
-              accept="image/"
+              accept="image/jpeg,image/png,image/gif"
               onChange={handleImageChange}
               className="rounded border border-slate-300 px-3 py-2 font-normal"
             />
@@ -171,9 +208,10 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         <div>
           <button
             type="submit"
+            disabled={isSubmitting}
             className="rounded bg-green-500 px-4 py-2 text-white hover:bg-blue-600"
           >
-            Thêm sản phẩm
+            {isSubmitting ? "Đang lưu..." : "Thêm sản phẩm"}
           </button>
           <button
             type="button"
