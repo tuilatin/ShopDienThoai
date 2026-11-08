@@ -168,7 +168,9 @@ export default function AdminProducts() {
       .catch((error) => {
         console.error("Lỗi tải sản phẩm:", error);
         if (isMounted) {
-          setErrorMessage("Không thể tải danh sách sản phẩm. Vui lòng thử lại.");
+          setErrorMessage(
+            "Không thể tải danh sách sản phẩm. Vui lòng thử lại.",
+          );
         }
       })
       .finally(() => {
@@ -245,11 +247,9 @@ export default function AdminProducts() {
 
   useEffect(() => {
     const invalidPage =
-      searchParams.has("page") &&
-      String(page) !== searchParams.get("page");
+      searchParams.has("page") && String(page) !== searchParams.get("page");
     const invalidPageSize =
-      searchParams.has("size") &&
-      String(pageSize) !== searchParams.get("size");
+      searchParams.has("size") && String(pageSize) !== searchParams.get("size");
     if (invalidPage || invalidPageSize) {
       const nextParams = new URLSearchParams(searchParams);
       nextParams.set("page", String(page));
@@ -376,6 +376,7 @@ export default function AdminProducts() {
               <th className="px-5 py-3">Mã sản phẩm</th>
               <th className="px-5 py-3">Tên sản phẩm</th>
               <th className="px-5 py-3">Mã danh mục</th>
+              <th className="px-5 py-3">Tên danh mục</th>
               <th className="px-5 py-3">Giá bán</th>
               <th className="px-5 py-3">Số lượng tồn</th>
               <th className="px-5 py-3">Hình ảnh</th>
@@ -402,13 +403,12 @@ export default function AdminProducts() {
                   key={sanPham.maSanPham}
                   className="border-b border-slate-200"
                 >
-                  <td className="px-5 py-3 font-medium">
-                    {sanPham.maSanPham}
-                  </td>
+                  <td className="px-5 py-3 font-medium">{sanPham.maSanPham}</td>
                   <td className="px-5 py-3 font-medium">
                     {sanPham.tenSanPham}
                   </td>
                   <td className="px-5 py-3">{sanPham.maDanhMuc}</td>
+                  <td className="px-5 py-3">{sanPham.tenDanhMuc}</td>
                   <td className="px-5 py-3">
                     {Number(sanPham.giaBan ?? 0).toLocaleString("vi-VN")} ₫
                   </td>
