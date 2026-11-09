@@ -85,7 +85,9 @@ function getPaginationItems(totalPages, currentPage) {
 
 export default function AdminProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
+  //Liên quan tới hiển thị sản phẩm
   const [sanPhams, setSanPhams] = useState([]);
+
   const [danhMucs, setDanhMucs] = useState([]);
   const [isAddProduct, setIsAddProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -99,7 +101,9 @@ export default function AdminProducts() {
   const [isLoading, setIsLoading] = useState(true);
   const [deletingProduct, setDeletingProduct] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  //lấy tham số page từ searchParams, nếu không có page thì mặc định là 0
   const parsedPage = Number.parseInt(searchParams.get("page") ?? "0", 10);
+  //số trang hiển thị sản phẩm, nếu không có size thì mặc định là DEFAULT_PAGE_SIZE
   const page = Number.isInteger(parsedPage) && parsedPage >= 0 ? parsedPage : 0;
   const parsedPageSize = Number.parseInt(
     searchParams.get("size") ?? String(DEFAULT_PAGE_SIZE),
@@ -108,6 +112,7 @@ export default function AdminProducts() {
   const pageSize = ALLOWED_PAGE_SIZES.has(parsedPageSize)
     ? parsedPageSize
     : DEFAULT_PAGE_SIZE;
+  //có liên quan tới hiển thị sản phẩm, nên khi searchParams thay đổi thì sẽ gọi lại useEffect để lấy dữ liệu mới
   const appliedSearch = {
     tenSanPham: searchParams.get("tenSanPham") ?? "",
     maDanhMuc: searchParams.get("maDanhMuc") ?? "",
@@ -135,9 +140,12 @@ export default function AdminProducts() {
     };
   }, []);
 
+  //liên quan tới hiển thị sản phẩm
   useEffect(() => {
     let isMounted = true;
-
+    //gọi API để lấy danh sách lấy sản phẩm dựa trên các tham số tìm kiếm
+    //khi gọi API ta truyền các tham số tìm kiếm vào params của request
+    //
     apiClient
       .get("/sanpham", {
         params: {
@@ -149,6 +157,7 @@ export default function AdminProducts() {
       })
       .then((response) => {
         if (isMounted) {
+          //hiển thị totalPages
           const totalPages = response.data.totalPages ?? 0;
           if (page >= Math.max(totalPages, 1)) {
             const lastValidPage = Math.max(totalPages - 1, 0);

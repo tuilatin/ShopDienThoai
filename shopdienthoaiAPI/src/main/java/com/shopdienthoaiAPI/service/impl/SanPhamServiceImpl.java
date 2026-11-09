@@ -25,6 +25,7 @@ import java.time.Instant;
 @Service
 @RequiredArgsConstructor
 public class SanPhamServiceImpl implements ISanPhamService {
+    //liên quan tới hiển thị sản phẩm
     private final SanPhamRepository sanPhamRepository;
     private final DanhMucRepository danhMucRepository;
     private final ProductImageStorageService imageStorageService;
@@ -56,6 +57,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 sp.getNgayTao());
     }
 
+    //liên quan tới hiển thị sản phẩm
     @Override
     public Page<SanPhamDto.Response> timKiemVaLoc(String maDanhMuc, String tenSanPham, Pageable pageable) {
         Page<SanPham> sanPhams = sanPhamRepository.timKiemVaLoc(maDanhMuc, tenSanPham, pageable);

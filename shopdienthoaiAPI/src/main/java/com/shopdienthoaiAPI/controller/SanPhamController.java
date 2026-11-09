@@ -28,7 +28,7 @@ public class SanPhamController {
 //    public ResponseEntity<List<SanPhamDto.Response>> findAll() {
 //        return ResponseEntity.ok(sanPhamService.findAll());
 //    }
-
+//liên quan tới hiển thị sản phẩm
     @GetMapping
     public ResponseEntity<Page<SanPhamDto.Response>> findAll(
             @RequestParam(required = false, defaultValue = "") String maDanhMuc,

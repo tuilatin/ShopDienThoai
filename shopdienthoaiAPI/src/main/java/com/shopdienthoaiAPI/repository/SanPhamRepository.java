@@ -20,6 +20,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
     SanPham findSanPhamsByMaSanPham(@Size(max = 5) String maSanPham);
     boolean existsByHinhAnhEndingWith(String imagePathSuffix);
 
+    //liên quan tới hiển thị san pham
     @Query("""
         select sp from SanPham sp
             where (:maDanhMuc = '' or sp.danhMuc.maDanhMuc = :maDanhMuc)
