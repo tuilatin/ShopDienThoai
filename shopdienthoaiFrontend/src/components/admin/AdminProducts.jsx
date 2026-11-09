@@ -159,13 +159,20 @@ export default function AdminProducts() {
         if (isMounted) {
           //hiển thị totalPages
           const totalPages = response.data.totalPages ?? 0;
+          //nếu trang mà lớn hơn tổng số trang thì set lại page = totalPages - 1, để tránh lỗi khi người dùng nhập page quá lớn
           if (page >= Math.max(totalPages, 1)) {
+            //trang hợp lệ cuối cùng là totalPages - 1, nhưng phải đảm bảo >= 0
             const lastValidPage = Math.max(totalPages - 1, 0);
+            //cập nhật lại searchParams để hiển thị trang hợp lệ cuối cùng
             const nextParams = new URLSearchParams(searchParams);
+            //dòng này sửa số trang trên URL
             nextParams.set("page", String(lastValidPage));
+            //cập nhật tham số trên URL bằng giá trị trong nextParams
             setSearchParams(nextParams, { replace: true });
           }
+          //đổ dữ liệu lên trang nếu sanPhams.length > 0, nếu không thì sẽ gán sanPhams = [] để hiển thị thông báo không tìm thấy sản phẩm
           setSanPhams(response.data.content ?? []);
+          //đặt PageInfo gồm tổng trang, tổng phần tử, first, last để hiển thị phân trang
           setPageInfo({
             totalPages,
             totalElements: response.data.totalElements ?? 0,
@@ -174,7 +181,9 @@ export default function AdminProducts() {
           });
         }
       })
+      //lỗi khi gọi api thì hiển thị cái dưới
       .catch((error) => {
+        //hiển thị ra log lỗi tải sản phẩm khi gọi API lỗi
         console.error("Lỗi tải sản phẩm:", error);
         if (isMounted) {
           setErrorMessage(
