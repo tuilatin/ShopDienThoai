@@ -3,6 +3,7 @@ package com.shopdienthoaiAPI.controller;
 import com.shopdienthoaiAPI.dto.SanPhamDto;
 import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.service.ISanPhamService;
+import com.shopdienthoaiAPI.service.impl.SanPhamServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -29,21 +30,15 @@ public class SanPhamController {
 //        return ResponseEntity.ok(sanPhamService.findAll());
 //    }
 //liên quan tới hiển thị sản phẩm
-    @GetMapping
-    public ResponseEntity<Page<SanPhamDto.Response>> findAll(
-            @RequestParam(required = false, defaultValue = "") String maDanhMuc,
-            @RequestParam(required = false, defaultValue = "") String tenSanPham,
-            @ParameterObject
-            @PageableDefault(
-                    page = 0,
-                    size = 5
-            ) Pageable pageable
-            ) {
-        return ResponseEntity.ok(
-                sanPhamService.timKiemVaLoc(maDanhMuc, tenSanPham, pageable)
-        );
 
+    @GetMapping
+    public ResponseEntity<Page<SanPhamDto.Response>> findAll(@RequestParam(required = false, defaultValue = "") String maSanPham,
+                                                             @RequestParam(required = false, defaultValue = "") String maDanhMuc,
+                                                             @ParameterObject Pageable pageable
+                                                             ) {
+        return ResponseEntity.ok(sanPhamService.timKiemVaLoc(maSanPham, maDanhMuc, pageable));
     }
+
 
    @GetMapping("/{maSanPham}")
     public SanPhamDto.Response findSanPhamByMaSanPham(@PathVariable String maSanPham) {

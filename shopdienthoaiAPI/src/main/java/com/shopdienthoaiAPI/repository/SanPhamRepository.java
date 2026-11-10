@@ -21,16 +21,17 @@ public interface SanPhamRepository extends JpaRepository<SanPham, String> {
     boolean existsByHinhAnhEndingWith(String imagePathSuffix);
 
     //liên quan tới hiển thị san pham
-    @Query("""
-        select sp from SanPham sp
-            where (:maDanhMuc = '' or sp.danhMuc.maDanhMuc = :maDanhMuc)
-                and (:tenSanPham = ''
-                    or lower(sp.tenSanPham) like lower(concat('%', :tenSanPham, '%')))
-    """
-    )
-    Page<SanPham> timKiemVaLoc(@Param("maDanhMuc") String maDanhMuc,
-                               @Param("tenSanPham") String tenSanPham,
-                               Pageable pageable);
+    //muốn tùy chon query ta lọc theo ma danh mục và tên sản phẩm
+    //bắt đầu bằng annotation @..eu
+    //rồi so sánh madanhmuc và tensanpham
+    //lúc đó ta truyền 2 param là madanhmuc va tenSanPham
 
+    @Query("""
+    select sp from SanPham sp
+    where (:maDanhMuc = '' or sp.danhMuc.maDanhMuc = :maDanhMuc) and 
+          (:tenSanPham = '' or lower(sp.tenSanPham) like lower(concat('%', :tenSanPham, '%')) ) 
+""")
+    Page<SanPham> timKiemVaLoc(@Param("maDanhMuc") String maDanhMuc,
+                               @Param("tenSanPham")String tenSanPham, Pageable pageable);
 
 }
