@@ -28,9 +28,7 @@ export default function AdminProducts() {
       >
         Thêm Sản Phẩm
       </button>
-      {isAddProduct && <ThemSanPham 
-        onClick=
-      />}
+      {isAddProduct && <ThemSanPham onCancel={() => setIsAddProduct(false)} />}
 
       <table className="w-full border-collapse text-left">
         <thead>
