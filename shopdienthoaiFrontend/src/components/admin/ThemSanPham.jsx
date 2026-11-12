@@ -6,9 +6,9 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
   const [danhMucs, setDanhMucs] = useState([]);
 
   useEffect(() => {
-    const getDanhMucs = () => {
+    const getDanhMucs = async () => {
       try {
-        const response = apiClient.get("/danhmuc");
+        const response = await apiClient.get("/danhmuc");
         setDanhMucs(response.data);
       } catch (error) {
         console.error("Không thể lấy danh mục", error);
