@@ -16,8 +16,6 @@ public interface ISanPhamService {
   SanPhamDto.Response suaSanPham(String maSanPham, SanPhamDto.Request sanPhamDto);
   void xoaSanPham(String maSanPham);
   //liên quan tới hiển thị sản phẩm
-  Page<SanPhamDto.Response> timKiemVaLoc(@Param("maDanhMuc") String maDanhMuc,
-                             @Param("tenSanPham") String tenSanPham,
-                             Pageable pageable);
 
+  Page<SanPhamDto.Response> timKiemVaLoc(String maDanhMuc, String tenSanPham, Pageable pageable);
 }

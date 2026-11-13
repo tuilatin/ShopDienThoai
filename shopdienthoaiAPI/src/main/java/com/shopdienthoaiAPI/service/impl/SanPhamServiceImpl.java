@@ -58,11 +58,14 @@ public class SanPhamServiceImpl implements ISanPhamService {
     }
 
     //liên quan tới hiển thị sản phẩm
+    //cái để hiển thị sản phẩm này gồm có 3 tham số
+    //maDanhMuc, tenSanPham, pageable
     @Override
     public Page<SanPhamDto.Response> timKiemVaLoc(String maDanhMuc, String tenSanPham, Pageable pageable) {
         Page<SanPham> sanPhams = sanPhamRepository.timKiemVaLoc(maDanhMuc, tenSanPham, pageable);
-                return convertToPageSanPhamResponse(sanPhams);
+        return convertToPageSanPhamResponse(sanPhams);
     }
+
 
     @Override
     public SanPhamDto.Response findSanPhamByMaSanPham(String maSanPham) {
@@ -127,6 +130,8 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPhamRepository.delete(sanPham);
         deleteImageAfterCommit(imageUrl);
     }
+
+
 
     private SanPham timSanPham(String maSanPham) {
         return sanPhamRepository.findByMaSanPham(maSanPham)
