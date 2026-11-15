@@ -6,7 +6,6 @@ import com.shopdienthoaiAPI.entity.SanPham;
 import com.shopdienthoaiAPI.repository.DanhMucRepository;
 import com.shopdienthoaiAPI.repository.SanPhamRepository;
 import com.shopdienthoaiAPI.service.ISanPhamService;
-import com.shopdienthoaiAPI.service.ProductImageStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,8 +27,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
     //liên quan tới hiển thị sản phẩm
     private final SanPhamRepository sanPhamRepository;
     private final DanhMucRepository danhMucRepository;
-    private final ProductImageStorageService imageStorageService;
-
 
     public Page<SanPhamDto.Response> convertToPageSanPhamResponse(Page<SanPham> sanPhams){
         return sanPhams.map(sp -> new SanPhamDto.Response(
