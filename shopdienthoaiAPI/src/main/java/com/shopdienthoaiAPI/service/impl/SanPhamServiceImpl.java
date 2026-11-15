@@ -94,7 +94,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
         try {
             sanPhamRepository.saveAndFlush(sanPham);
         } catch (RuntimeException exception) {
-            cleanupAfterFailedCreate(sanPhamDto.hinhAnh(), exception);
             throw exception;
         }
     }
@@ -113,9 +112,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPham.setHinhAnh(sanPhamDto.hinhAnh());
         sanPham.setMoTa (sanPhamDto.moTa());
         SanPham sanPhamDaLuu = sanPhamRepository.saveAndFlush(sanPham);
-        if (!java.util.Objects.equals(oldImageUrl, sanPhamDaLuu.getHinhAnh())) {
-            deleteImageAfterCommit(oldImageUrl);
-        }
         return convertToSanPhamDto(sanPhamDaLuu);
     }
 
@@ -123,9 +119,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
     @Transactional
     public void xoaSanPham(String maSanPham) {
         SanPham sanPham = timSanPham(maSanPham);
-        String imageUrl = sanPham.getHinhAnh();
         sanPhamRepository.delete(sanPham);
-        deleteImageAfterCommit(imageUrl);
     }
 
 
@@ -146,47 +140,5 @@ public class SanPhamServiceImpl implements ISanPhamService {
                         HttpStatus.BAD_REQUEST, "Không tìm thấy danh mục."));
     }
 
-    private void cleanupAfterFailedCreate(String imageUrl, RuntimeException originalException) {
-        try {
-            String imageSuffix = imageStorageService.getImagePathSuffix(imageUrl);
-            if (imageSuffix != null
-                    && !sanPhamRepository.existsByHinhAnhEndingWith(imageSuffix)) {
-                imageStorageService.deleteManagedImage(imageUrl);
-            }
-        } catch (IOException | RuntimeException cleanupException) {
-            originalException.addSuppressed(cleanupException);
-            log.error("Không thể dọn ảnh sau khi tạo sản phẩm thất bại: {}", imageUrl, cleanupException);
-        }
-    }
 
-    private void deleteImageAfterCommit(String imageUrl) {
-        if (imageUrl == null || imageUrl.isBlank()) {
-            return;
-        }
-
-        Runnable cleanup = () -> {
-            try {
-                String imageSuffix = imageStorageService.getImagePathSuffix(imageUrl);
-                if (imageSuffix != null
-                        && !sanPhamRepository.existsByHinhAnhEndingWith(imageSuffix)) {
-                    imageStorageService.deleteManagedImage(imageUrl);
-                }
-            } catch (IOException | RuntimeException exception) {
-                log.error("Không thể dọn ảnh sản phẩm: {}", imageUrl, exception);
-            }
-        };
-
-        if (TransactionSynchronizationManager.isSynchronizationActive()) {
-            TransactionSynchronizationManager.registerSynchronization(
-                    new TransactionSynchronization() {
-                        @Override
-                        public void afterCommit() {
-                            cleanup.run();
-                        }
-                    }
-            );
-        } else {
-            cleanup.run();
-        }
-    }
 }

@@ -76,6 +76,14 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             />
           </div>
         </div>
+        <div className="flex gap-10 mt-5">
+          <button className="border-2 border-blue-500 hover:bg-blue-600 cursor-pointer">
+            Lưu sản phẩm
+          </button>
+          <button className="border-2 border-red-500 hover:bg-red-600 cursor-pointer">
+            Hủy
+          </button>
+        </div>
       </form>
     </div>
   );

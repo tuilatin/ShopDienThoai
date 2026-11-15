@@ -1,5 +1,8 @@
 package com.shopdienthoaiAPI.controller;
 
+import com.shopdienthoaiAPI.service.ProductImageStorageService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,7 +31,13 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/sanpham")
+@RequestMapping("/api/v1/upload-image")
+@RequiredArgsConstructor
 public class ImageUploadController {
-    
+    private final ProductImageStorageService productImageStorageService;
+
+    @PostMapping
+    public Map<String, String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+        return Map.of("url", productImageStorageService.uploadImage(file));
+    }
 }
