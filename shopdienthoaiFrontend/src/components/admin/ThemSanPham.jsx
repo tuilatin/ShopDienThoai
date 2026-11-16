@@ -33,7 +33,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         uploadData,
       );
 
-      await apiClient.post("/sanpham/", {
+      await apiClient.post("/sanpham", {
         tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
         maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
         giaBan: Number(fields.get("giaBan")),
@@ -71,7 +71,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
               className="flex flex-col gap-1 text-sm font-medium"
             >
               Danh mục
-              <select name="tenDanhMuc" id="maDanhMuc">
+              <select name="maDanhMuc" id="maDanhMuc">
                 <option value="">Chọn danh mục</option>
                 {danhMucs.map((danhMuc) => (
                   <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
@@ -94,8 +94,8 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
             <label htmlFor="">Số lượng</label>
             <input
               type="text"
-              id="soLuong"
-              name="soLuong"
+              id="soLuongTon"
+              name="soLuongTon"
               className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </div>
@@ -120,7 +120,11 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
           >
             Lưu sản phẩm
           </button>
-          <button className="border-2 border-red-500 hover:bg-red-600 cursor-pointer">
+          <button
+            className="border-2 border-red-500 hover:bg-red-600 cursor-pointer"
+            type="button"
+            onClick={onCancel}
+          >
             Hủy
           </button>
         </div>

@@ -31,12 +31,12 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/upload-image")
+@RequestMapping("/api/v1/sanpham")
 @RequiredArgsConstructor
 public class ImageUploadController {
     private final ProductImageStorageService productImageStorageService;
 
-    @PostMapping
+    @PostMapping("/upload-image")
     public Map<String, String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
         return Map.of("url", productImageStorageService.uploadImage(file));
     }
