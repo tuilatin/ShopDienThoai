@@ -20,6 +20,11 @@ export default function AdminProducts() {
     setIsAddProduct(true);
   };
 
+  //truyền xuống component con hàm này bằng props
+  const onProductCreated = (newProduct) => {
+    setSanPhams((preProducts) => [...preProducts, newProduct]);
+  };
+
   return (
     <>
       <button
@@ -28,7 +33,12 @@ export default function AdminProducts() {
       >
         Thêm Sản Phẩm
       </button>
-      {isAddProduct && <ThemSanPham onCancel={() => setIsAddProduct(false)} />}
+      {isAddProduct && (
+        <ThemSanPham
+          onCancel={() => setIsAddProduct(false)}
+          onProductCreated={onProductCreated}
+        />
+      )}
 
       <table className="w-full border-collapse text-left">
         <thead>

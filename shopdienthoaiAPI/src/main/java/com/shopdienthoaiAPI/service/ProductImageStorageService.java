@@ -1,113 +1,59 @@
 package com.shopdienthoaiAPI.service;
 
-import com.shopdienthoaiAPI.repository.SanPhamRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileTime;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.stream.Stream;
-import java.util.regex.Pattern;
+import java.nio.file.*;
+import java.util.UUID;
 
-@Slf4j
 @Service
 public class ProductImageStorageService {
-    private static final Pattern MANAGED_FILE_NAME = Pattern.compile(
-            "[0-9a-fA-F-]{36}\\.(jpg|png|gif)"
-    );
-    private static final Duration ORPHAN_RETENTION = Duration.ofHours(24);
 
-    private final Path productImageDirectory;
-    private final SanPhamRepository sanPhamRepository;
+    @Value("${app.upload-dir}")
+    private String uploadDir;
 
-    public ProductImageStorageService(
-            @Value("${app.upload-dir:uploads}") String uploadDirectory,
-            SanPhamRepository sanPhamRepository
-    ) {
-        this.productImageDirectory = Paths.get(uploadDirectory)
-                .toAbsolutePath()
-                .normalize()
-                .resolve("products")
-                .normalize();
-        this.sanPhamRepository = sanPhamRepository;
-    }
+    public String uploadImage(MultipartFile file) throws IOException {
 
-    public boolean deleteManagedImage(String imageUrl) throws IOException {
-        Path imagePath = getManagedPath(imageUrl);
-        return imagePath != null && Files.deleteIfExists(imagePath);
-    }
-
-    public boolean isManagedImage(String imageUrl) {
-        return getManagedPath(imageUrl) != null;
-    }
-
-    public String getImagePathSuffix(String imageUrl) {
-        Path imagePath = getManagedPath(imageUrl);
-        return imagePath == null
-                ? null
-                : "/uploads/products/" + imagePath.getFileName();
-    }
-
-    @Scheduled(fixedDelay = 3_600_000)
-    public void cleanupOrphanedImages() {
-        if (!Files.isDirectory(productImageDirectory)) {
-            return;
+        //1. Kiểm tra file
+        if(file == null || file.isEmpty()) {
+            throw new RuntimeException("Vui lòng chọn ảnh");
         }
 
-        Instant cutoff = Instant.now().minus(ORPHAN_RETENTION);
-        try (Stream<Path> files = Files.list(productImageDirectory)) {
-            files.filter(Files::isRegularFile)
-                    .filter(path -> MANAGED_FILE_NAME.matcher(path.getFileName().toString()).matches())
-                    .forEach(path -> cleanupIfOrphaned(path, cutoff));
-        } catch (IOException exception) {
-            log.error("Không thể quét thư mục ảnh sản phẩm: {}", productImageDirectory, exception);
+        //2. Kiểm tra loại file
+        String contentType = file.getContentType();
+
+        if(contentType == null || !contentType.startsWith("image/")) {
+            throw new RuntimeException("File không phải ảnh");
         }
+
+        //3. Tạo thư mục nếu chưa tồn tại
+
+        //4. Tạo tên file mới tránh trùng lặp
+        //Lấy phần mở rộng của file
+        String originalFilename = file.getOriginalFilename();
+        if(originalFilename == null || !originalFilename.contains(".")) {
+            throw new RuntimeException("Tên file không hợp lệ");
+        }
+
+        String extensions = originalFilename.substring(originalFilename.lastIndexOf("."));
+        extensions = extensions.toLowerCase();
+        if(!extensions.matches("\\.(jpg|jpeg|png|gif)")) {
+            throw new RuntimeException("Định dạng không được hỗ trợ");
+        }
+
+        String fileName = UUID.randomUUID() + extensions;
+
+        //5. Lưu ảnh
+        Path directory = Paths.get(uploadDir).toAbsolutePath().normalize();
+        Files.createDirectories(directory);
+        Path targetPath = directory.resolve(fileName);
+
+        Files.copy(file.getInputStream(), targetPath,  StandardCopyOption.REPLACE_EXISTING);
+
+        //7. Trả về đường dẫn ảnh
+        return "/images/" + fileName;
     }
 
-    private void cleanupIfOrphaned(Path imagePath, Instant cutoff) {
-        try {
-            FileTime modifiedTime = Files.getLastModifiedTime(imagePath);
-            if (modifiedTime.toInstant().isBefore(cutoff)) {
-                String imageSuffix = "/uploads/products/" + imagePath.getFileName();
-                if (!sanPhamRepository.existsByHinhAnhEndingWith(imageSuffix)) {
-                    Files.deleteIfExists(imagePath);
-                }
-            }
-        } catch (IOException | RuntimeException exception) {
-            log.error("Không thể dọn ảnh mồ côi: {}", imagePath, exception);
-        }
-    }
-
-    private Path getManagedPath(String imageUrl) {
-        if (imageUrl == null || imageUrl.isBlank()) {
-            return null;
-        }
-
-        String imagePath;
-        try {
-            imagePath = URI.create(imageUrl).getPath();
-        } catch (IllegalArgumentException exception) {
-            return null;
-        }
-
-        if (imagePath == null || !imagePath.startsWith("/uploads/products/")) {
-            return null;
-        }
-
-        String fileName = imagePath.substring("/uploads/products/".length());
-        if (!MANAGED_FILE_NAME.matcher(fileName).matches()) {
-            return null;
-        }
-
-        Path resolvedPath = productImageDirectory.resolve(fileName).normalize();
-        return resolvedPath.startsWith(productImageDirectory) ? resolvedPath : null;
-    }
 }
