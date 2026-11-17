@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ISanPhamService {
   SanPhamDto.Response findSanPhamByMaSanPham(@Size(max = 5) String maSanPham);
-  void themSampham(SanPhamDto.Request sanPhamDto);
+  SanPhamDto.Response themSampham(SanPhamDto.Request sanPhamDto);
   SanPhamDto.Response suaSanPham(String maSanPham, SanPhamDto.Request sanPhamDto);
   void xoaSanPham(String maSanPham);
   //liên quan tới hiển thị sản phẩm

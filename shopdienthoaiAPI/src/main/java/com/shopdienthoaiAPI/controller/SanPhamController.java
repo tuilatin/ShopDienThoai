@@ -46,8 +46,8 @@ public class SanPhamController {
     }
 
     @PostMapping
-    public void themSampham(@Valid @RequestBody SanPhamDto.Request sanPhamDto) {
-        sanPhamService.themSampham(sanPhamDto);
+    public SanPhamDto.Response themSampham(@Valid @RequestBody SanPhamDto.Request sanPhamDto) {
+        return sanPhamService.themSampham(sanPhamDto);
     }
 
     @PutMapping("/{maSanPham}")

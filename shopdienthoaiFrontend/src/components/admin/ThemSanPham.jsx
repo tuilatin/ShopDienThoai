@@ -41,6 +41,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         moTa: String(fields.get("moTa") ?? "").trim(),
         hinhAnh: uploadResponse.data.url,
       });
+      console.log("res.data =", response.data);
       onProductCreated(response.data);
     } catch (error) {
       console.error("Lỗi thêm sản phẩm:", error);

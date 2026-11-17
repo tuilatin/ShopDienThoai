@@ -80,7 +80,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Override
     @Transactional
-    public void themSampham(SanPhamDto.Request sanPhamDto) {
+    public SanPhamDto.Response themSampham(SanPhamDto.Request sanPhamDto) {
         DanhMuc danhMuc = timDanhMuc(sanPhamDto.maDanhMuc());
         SanPham sanPham = new SanPham();
         sanPham.setMaSanPham (taoMaSanPham());
@@ -91,11 +91,8 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPham.setHinhAnh (sanPhamDto.hinhAnh());
         sanPham.setMoTa (sanPhamDto.moTa());
         sanPham.setNgayTao (Instant.now());
-        try {
-            sanPhamRepository.saveAndFlush(sanPham);
-        } catch (RuntimeException exception) {
-            throw exception;
-        }
+        sanPhamRepository.save(sanPham);
+        return convertToSanPhamDto(sanPham);
     }
 
     @Override
