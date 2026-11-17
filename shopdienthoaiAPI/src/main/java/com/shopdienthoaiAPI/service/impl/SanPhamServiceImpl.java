@@ -93,6 +93,11 @@ public class SanPhamServiceImpl implements ISanPhamService {
         sanPham.setNgayTao (Instant.now());
         sanPhamRepository.save(sanPham);
         return convertToSanPhamDto(sanPham);
+        try {
+            sanPhamRepository.saveAndFlush(sanPham);
+        } catch (RuntimeException exception) {
+            throw exception;
+        }
     }
 
     @Override
@@ -136,6 +141,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "Không tìm thấy danh mục."));
     }
+
 
 
 }

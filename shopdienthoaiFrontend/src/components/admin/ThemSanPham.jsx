@@ -54,6 +54,10 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
         onSubmit={handleSubmit}
       >
+      <form
+        className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+        onSubmit={handleSubmit}
+      >
         <div>Thông tin sản phẩm mới</div>
         <div className="flex gap-3">
           <div className="flex flex-col">
