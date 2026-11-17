@@ -9,10 +9,12 @@ export default function AdminProducts() {
       try {
         const response = await apiClient.get("/sanpham");
         setSanPhams(response.data.content);
+        console.log("sanphamData= ", response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
+
     fetchProducts();
   }, []);
 
@@ -66,7 +68,7 @@ export default function AdminProducts() {
               <td className="px-5 py-3">{sanPham.soLuongTon}</td>
               <td className="px-5 py-3">
                 <img
-                  src={sanPham.hinhAnh}
+                  src={`http://localhost:8081/uploads/${sanPham.hinhAnh}`}
                   alt={sanPham.tenSanPham}
                   className="w-16 h-16 object-cover"
                 />

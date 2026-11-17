@@ -33,6 +33,8 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         uploadData,
       );
 
+      console.log("Trả về imageUrl", uploadResponse.data);
+
       const response = await apiClient.post("/sanpham", {
         tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
         maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
@@ -50,10 +52,6 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
 
   return (
     <div>
-      <form
-        className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
-        onSubmit={handleSubmit}
-      >
       <form
         className="mb-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
         onSubmit={handleSubmit}

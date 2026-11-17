@@ -53,7 +53,7 @@ public class ProductImageStorageService {
         Files.copy(file.getInputStream(), targetPath,  StandardCopyOption.REPLACE_EXISTING);
 
         //7. Trả về đường dẫn ảnh
-        return "/images/" + fileName;
+        return fileName;
     }
 
 }
