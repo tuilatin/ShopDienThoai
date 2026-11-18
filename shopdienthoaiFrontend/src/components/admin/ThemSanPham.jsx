@@ -1,9 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import apiClient from "../../api/apiClient";
 import { deleteUnattachedProductImage } from "../../api/productImage";
 
 export default function ThemSanPham({ onCancel, onProductCreated }) {
   const [danhMucs, setDanhMucs] = useState([]);
+  const [previewUrl, setPreviewUrl] = useState("");
+
+  useEffect(() => {
+    if (!previewUrl) return;
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [[previewUrl]]);
 
   useEffect(() => {
     const getDanhMucs = async () => {
@@ -105,7 +111,23 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
           </div>
           <div className="flex flex-col">
             <label htmlFor="">Hình ảnh</label>
-            <input type="file" id="hinhAnh" name="hinhAnh" />
+            <input
+              type="file"
+              id="hinhAnh"
+              name="hinhAnh"
+              accept="image/*"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                setPreviewUrl(file ? URL.createObjectURL(file) : "");
+              }}
+            />
+            {previewUrl != "" && (
+              <img
+                src={previewUrl}
+                alt="ảnh xem trước"
+                className="w-16 h-16 object-cover"
+              />
+            )}
           </div>
           <div className="flex flex-col">
             <label htmlFor="">Mô tả</label>
