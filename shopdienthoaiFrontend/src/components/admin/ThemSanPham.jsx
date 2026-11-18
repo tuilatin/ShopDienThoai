@@ -1,14 +1,17 @@
 import { useState, useEffect, use } from "react";
 import apiClient from "../../api/apiClient";
 import { deleteUnattachedProductImage } from "../../api/productImage";
-
+//form này cả thêm cả sửa sản phẩm
 export default function ThemSanPham({ onCancel, onProductCreated }) {
   const [danhMucs, setDanhMucs] = useState([]);
   const [previewUrl, setPreviewUrl] = useState("");
 
   useEffect(() => {
+    //nếu chưa có ảnh thì không cần làm gì
     if (!previewUrl) return;
+    //gọi hàm cleanUp trước khi chạy lại với URL mới, hoặc khi component bị gỡ khỏi trang
     return () => URL.revokeObjectURL(previewUrl);
+    //chạy effect khi component được render lần đầu và khi previewUrl thay đổi
   }, [[previewUrl]]);
 
   useEffect(() => {
@@ -115,9 +118,14 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
               type="file"
               id="hinhAnh"
               name="hinhAnh"
+              //gợi hộp thoại chọn file chỉ hiển thị các loại ảnh như PNG, JPG, GIF
               accept="image/*"
+              //chạy hàm bên trong khi người dùng thay đổi lựa chọn file
               onChange={(event) => {
+                //event.target là ô chọn file
+                //event.target.files lấy file đầu tiên được chọn nếu có ?. giúp tránh lỗi nếu files không có giá trị
                 const file = event.target.files?.[0];
+                //nếu có file thì tạo URL để trình duyệt hiển thị nội dung file cục bộ
                 setPreviewUrl(file ? URL.createObjectURL(file) : "");
               }}
             />
@@ -125,7 +133,7 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
               <img
                 src={previewUrl}
                 alt="ảnh xem trước"
-                className="w-16 h-16 object-cover"
+                className="w-30 h-30 object-cover"
               />
             )}
           </div>
