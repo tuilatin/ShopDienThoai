@@ -2,7 +2,11 @@ import { useState, useEffect, use } from "react";
 import apiClient from "../../api/apiClient";
 import { deleteUnattachedProductImage } from "../../api/productImage";
 //form này cả thêm cả sửa sản phẩm
-export default function ThemSanPham({ onCancel, onProductCreated }) {
+export default function ThemSanPham({
+  sanPhamDangSua,
+  onCancel,
+  onProductCreated,
+}) {
   const [danhMucs, setDanhMucs] = useState([]);
   const [previewUrl, setPreviewUrl] = useState("");
 
@@ -66,87 +70,172 @@ export default function ThemSanPham({ onCancel, onProductCreated }) {
         onSubmit={handleSubmit}
       >
         <div>Thông tin sản phẩm mới</div>
-        <div className="flex gap-3">
-          <div className="flex flex-col">
-            <label htmlFor="tenSanPham" className="">
-              Tên sản phẩm
-            </label>
-            <input
-              id="tenSanPham"
-              name="tenSanPham"
-              type="text"
-              className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label
-              htmlFor="maDanhMuc"
-              className="flex flex-col gap-1 text-sm font-medium"
-            >
-              Danh mục
-              <select name="maDanhMuc" id="maDanhMuc">
-                <option value="">Chọn danh mục</option>
-                {danhMucs.map((danhMuc) => (
-                  <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
-                    {danhMuc.tenDanhMuc}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="">Giá bán</label>
-            <input
-              type="text"
-              id="giaBan"
-              name="giaBan"
-              className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="">Số lượng</label>
-            <input
-              type="text"
-              id="soLuongTon"
-              name="soLuongTon"
-              className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="">Hình ảnh</label>
-            <input
-              type="file"
-              id="hinhAnh"
-              name="hinhAnh"
-              //gợi hộp thoại chọn file chỉ hiển thị các loại ảnh như PNG, JPG, GIF
-              accept="image/*"
-              //chạy hàm bên trong khi người dùng thay đổi lựa chọn file
-              onChange={(event) => {
-                //event.target là ô chọn file
-                //event.target.files lấy file đầu tiên được chọn nếu có ?. giúp tránh lỗi nếu files không có giá trị
-                const file = event.target.files?.[0];
-                //nếu có file thì tạo URL để trình duyệt hiển thị nội dung file cục bộ
-                setPreviewUrl(file ? URL.createObjectURL(file) : "");
-              }}
-            />
-            {previewUrl != "" && (
-              <img
-                src={previewUrl}
-                alt="ảnh xem trước"
-                className="w-30 h-30 object-cover"
+        {sanPhamDangSua == null ? (
+          <div className="flex gap-3">
+            <div className="flex flex-col">
+              <label htmlFor="tenSanPham" className="">
+                Tên sản phẩm
+              </label>
+              <input
+                id="tenSanPham"
+                name="tenSanPham"
+                type="text"
+                className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
               />
-            )}
+            </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="maDanhMuc"
+                className="flex flex-col gap-1 text-sm font-medium"
+              >
+                Danh mục
+                <select name="maDanhMuc" id="maDanhMuc">
+                  <option value="">Chọn danh mục</option>
+                  {danhMucs.map((danhMuc) => (
+                    <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
+                      {danhMuc.tenDanhMuc}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="">Giá bán</label>
+              <input
+                type="text"
+                id="giaBan"
+                name="giaBan"
+                className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="">Số lượng</label>
+              <input
+                type="text"
+                id="soLuongTon"
+                name="soLuongTon"
+                className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="">Hình ảnh</label>
+              <input
+                type="file"
+                id="hinhAnh"
+                name="hinhAnh"
+                //gợi hộp thoại chọn file chỉ hiển thị các loại ảnh như PNG, JPG, GIF
+                accept="image/*"
+                //chạy hàm bên trong khi người dùng thay đổi lựa chọn file
+                onChange={(event) => {
+                  //event.target là ô chọn file
+                  //event.target.files lấy file đầu tiên được chọn nếu có ?. giúp tránh lỗi nếu files không có giá trị
+                  const file = event.target.files?.[0];
+                  //nếu có file thì tạo URL để trình duyệt hiển thị nội dung file cục bộ
+                  setPreviewUrl(file ? URL.createObjectURL(file) : "");
+                }}
+              />
+              {previewUrl != "" && (
+                <img
+                  src={previewUrl}
+                  alt="ảnh xem trước"
+                  className="w-30 h-30 object-cover"
+                />
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="">Mô tả</label>
+              <input
+                type="text"
+                id="moTa"
+                name="moTa"
+                className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="">Mô tả</label>
-            <input
-              type="text"
-              id="moTa"
-              name="moTa"
-              className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            />
+        ) : (
+          <div className="flex gap-3">
+            <div className="flex flex-col">
+              <label htmlFor="tenSanPham" className="">
+                Tên sản phẩm
+              </label>
+              <input
+                id="tenSanPham"
+                name="tenSanPham"
+                type="text"
+                className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="maDanhMuc"
+                className="flex flex-col gap-1 text-sm font-medium"
+              >
+                Danh mục
+                <select name="maDanhMuc" id="maDanhMuc">
+                  <option value="">Chọn danh mục</option>
+                  {danhMucs.map((danhMuc) => (
+                    <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
+                      {danhMuc.tenDanhMuc}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="">Giá bán</label>
+              <input
+                type="text"
+                id="giaBan"
+                name="giaBan"
+                className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="">Số lượng</label>
+              <input
+                type="text"
+                id="soLuongTon"
+                name="soLuongTon"
+                className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="">Hình ảnh</label>
+              <input
+                type="file"
+                id="hinhAnh"
+                name="hinhAnh"
+                //gợi hộp thoại chọn file chỉ hiển thị các loại ảnh như PNG, JPG, GIF
+                accept="image/*"
+                //chạy hàm bên trong khi người dùng thay đổi lựa chọn file
+                onChange={(event) => {
+                  //event.target là ô chọn file
+                  //event.target.files lấy file đầu tiên được chọn nếu có ?. giúp tránh lỗi nếu files không có giá trị
+                  const file = event.target.files?.[0];
+                  //nếu có file thì tạo URL để trình duyệt hiển thị nội dung file cục bộ
+                  setPreviewUrl(file ? URL.createObjectURL(file) : "");
+                }}
+              />
+              {previewUrl != "" && (
+                <img
+                  src={previewUrl}
+                  alt="ảnh xem trước"
+                  className="w-30 h-30 object-cover"
+                />
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="">Mô tả</label>
+              <input
+                type="text"
+                id="moTa"
+                name="moTa"
+                className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
           </div>
-        </div>
+        )}
+
         <div className="flex gap-10 mt-5">
           <button
             className="border-2 border-blue-500 hover:bg-blue-600 cursor-pointer"

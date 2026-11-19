@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
 import ThemSanPham from "./ThemSanPham";
 export default function AdminProducts() {
-  const [isAddProduct, setIsAddProduct] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [sanPhamDangSua, setSanPhamDangSua] = useState(null);
   const [sanPhams, setSanPhams] = useState([]);
   useEffect(() => {
     const fetchProducts = async () => {
@@ -18,10 +19,6 @@ export default function AdminProducts() {
     fetchProducts();
   }, []);
 
-  const handleAddProduct = () => {
-    setIsAddProduct(true);
-  };
-
   //truyền xuống component con hàm này bằng props
   const onProductCreated = (newProduct) => {
     setSanPhams((preProducts) => [...preProducts, newProduct]);
@@ -31,13 +28,17 @@ export default function AdminProducts() {
     <>
       <button
         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
-        onClick={handleAddProduct}
+        onClick={() => {
+          setSanPhamDangSua(null);
+          setIsFormOpen(true);
+        }}
       >
         Thêm Sản Phẩm
       </button>
-      {isAddProduct && (
+      {isFormOpen && (
         <ThemSanPham
-          onCancel={() => setIsAddProduct(false)}
+          sanPham={sanPhamDangSua}
+          onCancel={() => setIsFormOpen(false)}
           onProductCreated={onProductCreated}
         />
       )}
@@ -75,7 +76,14 @@ export default function AdminProducts() {
               </td>
               <td className="px-5 py-3">{sanPham.moTa}</td>
               <td className="px-5 py-3">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={() => {
+                    //do dòng này nó mới chớp hiện cái form
+                    setSanPhamDangSua(sanPham);
+                    setIsFormOpen(true);
+                  }}
+                >
                   Sửa
                 </button>
                 <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-2">
