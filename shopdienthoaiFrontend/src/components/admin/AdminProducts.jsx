@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
-import ThemSanPham from "./ThemSanPham";
+import ThemSuaSanPham from "./ThemSuaSanPham";
 export default function AdminProducts() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [sanPhamDangSua, setSanPhamDangSua] = useState(null);
@@ -36,8 +36,9 @@ export default function AdminProducts() {
         Thêm Sản Phẩm
       </button>
       {isFormOpen && (
-        <ThemSanPham
-          sanPham={sanPhamDangSua}
+        <ThemSuaSanPham
+          maSanPhamMoiNhat={sanPhams.filter()}
+          sanPhamDangSua={sanPhamDangSua}
           onCancel={() => setIsFormOpen(false)}
           onProductCreated={onProductCreated}
         />
