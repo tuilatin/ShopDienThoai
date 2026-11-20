@@ -35,7 +35,7 @@ export default function AdminProducts() {
   }, null);
 
   const maMoiNhat = sanPhamMoiNhat?.maSanPham ?? null;
-  const maTiepTheo = maMoiNhat.slice(2) + 1;
+  const maTiepTheo = `SP${String(Number(maMoiNhat.slice(2)) + 1).padStart(3, "0")}`;
 
   return (
     <>
@@ -50,7 +50,7 @@ export default function AdminProducts() {
       </button>
       {isFormOpen && (
         <ThemSuaSanPham
-          maSanPhamMoiNhat={maMoiNhat}
+          maSanPhamMoiNhat={maTiepTheo}
           sanPhamDangSua={sanPhamDangSua}
           onCancel={() => setIsFormOpen(false)}
           onProductCreated={onProductCreated}
