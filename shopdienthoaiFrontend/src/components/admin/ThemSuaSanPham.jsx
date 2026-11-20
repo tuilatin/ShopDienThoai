@@ -3,6 +3,7 @@ import apiClient from "../../api/apiClient";
 import { deleteUnattachedProductImage } from "../../api/productImage";
 //form này cả thêm cả sửa sản phẩm
 export default function ThemSanPham({
+  maSanPhamMoiNhat,
   sanPhamDangSua,
   onCancel,
   onProductCreated,
@@ -81,7 +82,11 @@ export default function ThemSanPham({
               name="maSanPham"
               type="text"
               disabled
-              defaultValue={sanPhamDangSua?.maSanPham ?? ""}
+              defaultValue={
+                maSanPhamMoiNhat != null
+                  ? maSanPhamMoiNhat
+                  : sanPhamDangSua.maSanPham
+              }
               className="w-40 rounded-md border-2 border-blue-500 bg-gray-200 px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </div>

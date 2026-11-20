@@ -24,6 +24,19 @@ export default function AdminProducts() {
     setSanPhams((preProducts) => [...preProducts, newProduct]);
   };
 
+  const sanPhamMoiNhat = sanPhams.reduce((max, sp) => {
+    if (!max) return sp;
+
+    return sp.maSanPham.localeCompare(max.maSanPham, undefined, {
+      numeric: true,
+    }) > 0
+      ? sp
+      : max;
+  }, null);
+
+  const maMoiNhat = sanPhamMoiNhat?.maSanPham ?? null;
+  const maTiepTheo = maMoiNhat.slice(2) + 1;
+
   return (
     <>
       <button
@@ -37,7 +50,7 @@ export default function AdminProducts() {
       </button>
       {isFormOpen && (
         <ThemSuaSanPham
-          maSanPhamMoiNhat={sanPhams.filter()}
+          maSanPhamMoiNhat={maMoiNhat}
           sanPhamDangSua={sanPhamDangSua}
           onCancel={() => setIsFormOpen(false)}
           onProductCreated={onProductCreated}
