@@ -8,6 +8,7 @@ export default function ThemSanPham({
   onCancel,
   onProductCreated,
 }) {
+  const [maDanhMuc, setMaDanhMuc] = useState(sanPhamDangSua?.maDanhMuc ?? "");
   const [danhMucs, setDanhMucs] = useState([]);
   const [previewUrl, setPreviewUrl] = useState("");
 
@@ -82,11 +83,7 @@ export default function ThemSanPham({
               name="maSanPham"
               type="text"
               disabled
-              defaultValue={
-                maSanPhamMoiNhat != null
-                  ? maSanPhamMoiNhat
-                  : sanPhamDangSua.maSanPham
-              }
+              defaultValue={sanPhamDangSua?.maSanPham ?? maSanPhamMoiNhat ?? ""}
               className="w-40 rounded-md border-2 border-blue-500 bg-gray-200 px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </div>
@@ -108,7 +105,12 @@ export default function ThemSanPham({
               className="flex flex-col gap-1 text-sm font-medium"
             >
               Danh mục
-              <select name="maDanhMuc" id="maDanhMuc">
+              <select
+                name="maDanhMuc"
+                id="maDanhMuc"
+                value={maDanhMuc}
+                onChange={(event) => setMaDanhMuc(event.target.value)}
+              >
                 <option value="">Chọn danh mục</option>
                 {danhMucs.map((danhMuc) => (
                   <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
