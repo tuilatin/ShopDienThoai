@@ -34,7 +34,12 @@ public class SanPhamController {
     @GetMapping
     public ResponseEntity<Page<SanPhamDto.Response>> findAll(@RequestParam(required = false, defaultValue = "") String maSanPham,
                                                              @RequestParam(required = false, defaultValue = "") String maDanhMuc,
-                                                             @ParameterObject Pageable pageable
+                                                             @ParameterObject
+                                                             @PageableDefault(
+                                                                     size = 100,
+                                                                     sort = "maSanPham"
+                                                             )
+                                                                 Pageable pageable
                                                              ) {
         return ResponseEntity.ok(sanPhamService.timKiemVaLoc(maSanPham, maDanhMuc, pageable));
     }
