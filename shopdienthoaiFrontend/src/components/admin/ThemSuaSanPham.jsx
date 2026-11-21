@@ -126,6 +126,7 @@ export default function ThemSanPham({
               type="text"
               id="giaBan"
               name="giaBan"
+              defaultValue={sanPhamDangSua?.giaBan ?? ""}
               className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </div>
@@ -135,6 +136,7 @@ export default function ThemSanPham({
               type="text"
               id="soLuongTon"
               name="soLuongTon"
+              defaultValue={sanPhamDangSua?.soLuongTon ?? ""}
               className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </div>
@@ -169,6 +171,7 @@ export default function ThemSanPham({
               type="text"
               id="moTa"
               name="moTa"
+              defaultValue={sanPhamDangSua?.moTa ?? ""}
               className="w-40 rounded-md border-2 border-blue-500 bg-white px-1 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </div>
