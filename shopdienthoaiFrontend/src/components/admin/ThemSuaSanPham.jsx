@@ -10,7 +10,10 @@ export default function ThemSanPham({
 }) {
   const [maDanhMuc, setMaDanhMuc] = useState(sanPhamDangSua?.maDanhMuc ?? "");
   const [danhMucs, setDanhMucs] = useState([]);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [previewUrl, setPreviewUrl] = useState(() => {
+    if (!sanPhamDangSua?.hinhAnh) return "";
+    return `http://localhost:8081/uploads/${sanPhamDangSua.hinhAnh}`;
+  });
 
   useEffect(() => {
     //nếu chưa có ảnh thì không cần làm gì
@@ -154,7 +157,13 @@ export default function ThemSanPham({
                 //event.target.files lấy file đầu tiên được chọn nếu có ?. giúp tránh lỗi nếu files không có giá trị
                 const file = event.target.files?.[0];
                 //nếu có file thì tạo URL để trình duyệt hiển thị nội dung file cục bộ
-                setPreviewUrl(file ? URL.createObjectURL(file) : "");
+                setPreviewUrl(
+                  file
+                    ? URL.createObjectURL(file)
+                    : sanPhamDangSua?.hinhAnh
+                      ? `http://localhost:8081/uploads/${sanPhamDangSua.hinhAnh}`
+                      : "",
+                );
               }}
             />
             {previewUrl != "" && (
@@ -163,6 +172,9 @@ export default function ThemSanPham({
                 alt="ảnh xem trước"
                 className="w-30 h-30 object-cover"
               />
+            )}
+            {sanPhamDangSua?.hinhAnh && (
+              <p className="text-sm text-gray-600">{sanPhamDangSua.hinhAnh}</p>
             )}
           </div>
           <div className="flex flex-col">
