@@ -52,15 +52,34 @@ export default function ThemSanPham({
       );
 
       console.log("Trả về imageUrl", uploadResponse.data);
-
-      const response = await apiClient.post("/sanpham", {
-        tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
-        maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
-        giaBan: Number(fields.get("giaBan")),
-        soLuongTon: Number(fields.get("soLuongTon")),
-        moTa: String(fields.get("moTa") ?? "").trim(),
-        hinhAnh: uploadResponse.data.url,
-      });
+      var response;
+      {
+        sanPhamDangSua == null
+          ? (response = await apiClient.post("/sanpham", {
+              tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
+              maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
+              giaBan: Number(fields.get("giaBan")),
+              soLuongTon: Number(fields.get("soLuongTon")),
+              moTa: String(fields.get("moTa") ?? "").trim(),
+              hinhAnh: uploadResponse.data.url,
+            }))
+          : (response = await apiClient.put("/sanpham", {
+              tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
+              maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
+              giaBan: Number(fields.get("giaBan")),
+              soLuongTon: Number(fields.get("soLuongTon")),
+              moTa: String(fields.get("moTa") ?? "").trim(),
+              hinhAnh: uploadResponse.data.url,
+            }));
+      }
+      // const response = await apiClient.post("/sanpham", {
+      //   tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
+      //   maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
+      //   giaBan: Number(fields.get("giaBan")),
+      //   soLuongTon: Number(fields.get("soLuongTon")),
+      //   moTa: String(fields.get("moTa") ?? "").trim(),
+      //   hinhAnh: uploadResponse.data.url,
+      // });
       console.log("res.data =", response.data);
       onProductCreated(response.data);
     } catch (error) {
