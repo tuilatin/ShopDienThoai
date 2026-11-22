@@ -1,6 +1,7 @@
 import { useState, useEffect, use } from "react";
 import apiClient from "../../api/apiClient";
 import { deleteUnattachedProductImage } from "../../api/productImage";
+import { Form } from "react-router-dom";
 //form này cả thêm cả sửa sản phẩm
 export default function ThemSanPham({
   maSanPhamMoiNhat,
@@ -38,48 +39,21 @@ export default function ThemSanPham({
 
   async function handleSubmit(event) {
     event.preventDefault();
-
     const fields = new FormData(event.currentTarget);
-    const imageFile = fields.get("hinhAnh");
+    const selectedImage = fields.get("hinhAnh");
+    try {
+      let hinhAnh = sanPhamDangSua?.hinhAnh ?? "";
+      if (selectedImage instanceof File && selectedImage.size > 0) {
+            
+        
+          const upLoadImageResponse = apiClient.post("/sanPham/upload-image");
+        } catch (error) {
+
+        
+      }
+    }
 
     try {
-      const uploadData = new FormData();
-      uploadData.append("file", imageFile);
-
-      const uploadResponse = await apiClient.post(
-        "/sanpham/upload-image",
-        uploadData,
-      );
-
-      console.log("Trả về imageUrl", uploadResponse.data);
-      var response;
-      {
-        sanPhamDangSua == null
-          ? (response = await apiClient.post("/sanpham", {
-              tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
-              maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
-              giaBan: Number(fields.get("giaBan")),
-              soLuongTon: Number(fields.get("soLuongTon")),
-              moTa: String(fields.get("moTa") ?? "").trim(),
-              hinhAnh: uploadResponse.data.url,
-            }))
-          : (response = await apiClient.put("/sanpham", {
-              tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
-              maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
-              giaBan: Number(fields.get("giaBan")),
-              soLuongTon: Number(fields.get("soLuongTon")),
-              moTa: String(fields.get("moTa") ?? "").trim(),
-              hinhAnh: uploadResponse.data.url,
-            }));
-      }
-      // const response = await apiClient.post("/sanpham", {
-      //   tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
-      //   maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
-      //   giaBan: Number(fields.get("giaBan")),
-      //   soLuongTon: Number(fields.get("soLuongTon")),
-      //   moTa: String(fields.get("moTa") ?? "").trim(),
-      //   hinhAnh: uploadResponse.data.url,
-      // });
       console.log("res.data =", response.data);
       onProductCreated(response.data);
     } catch (error) {
@@ -213,7 +187,7 @@ export default function ThemSanPham({
             className="border-2 border-blue-500 hover:bg-blue-600 cursor-pointer"
             type="submit"
           >
-            Lưu sản phẩm
+            {sanPhamDangSua != null ? "Lưu thay đổi" : "Lưu sản phẩm"}
           </button>
           <button
             className="border-2 border-red-500 hover:bg-red-600 cursor-pointer"
