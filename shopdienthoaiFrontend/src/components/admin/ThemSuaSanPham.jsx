@@ -1,6 +1,7 @@
 import { useState, useEffect, use } from "react";
 import apiClient from "../../api/apiClient";
 import { deleteUnattachedProductImage } from "../../api/productImage";
+import { getProductImageUrl } from "../../lib/productImageUrl";
 import { Form } from "react-router-dom";
 //form này cả thêm cả sửa sản phẩm
 export default function ThemSanPham({
@@ -13,7 +14,7 @@ export default function ThemSanPham({
   const [danhMucs, setDanhMucs] = useState([]);
   const [previewUrl, setPreviewUrl] = useState(() => {
     if (!sanPhamDangSua?.hinhAnh) return "";
-    return `http://localhost:8081/uploads/${sanPhamDangSua.hinhAnh}`;
+    return getProductImageUrl(sanPhamDangSua.hinhAnh);
   });
 
   useEffect(() => {
@@ -44,20 +45,29 @@ export default function ThemSanPham({
     try {
       let hinhAnh = sanPhamDangSua?.hinhAnh ?? "";
       if (selectedImage instanceof File && selectedImage.size > 0) {
-            
-        
-          const upLoadImageResponse = apiClient.post("/sanPham/upload-image");
-        } catch (error) {
-
-        
+        const upLoadForm = new FormData();
+        upLoadForm.append("file", selectedImage);
+        const upLoadImageResponse = await apiClient.post(
+          "/sanPham/upload-image",
+          upLoadForm,
+        );
+        hinhAnh = upLoadImageResponse.data.url;
       }
-    }
+      const payload = {
+        tenSanPham: String(fields.get("tenSanPham") ?? "").trim(),
+        maDanhMuc: String(fields.get("maDanhMuc") ?? ""),
+        giaBan: Number(fields.get("giaBan")),
+        soLuongTon: Number(fields.get("soLuongTon")),
+        hinhAnh,
+        moTa: String(fields.get("moTa") ?? "").trim(),
+      };
 
-    try {
-      console.log("res.data =", response.data);
-      onProductCreated(response.data);
+      const response = sanPhamDangSua
+        ? await apiClient.put(`/sanpham/${sanPhamDangSua.maSanPham}`, payload)
+        : await apiClient.post("/sanpham", payload);
+      console.log(response.data);
     } catch (error) {
-      console.error("Lỗi thêm sản phẩm:", error);
+      console.log("Lỗi :", error);
     }
   }
 
@@ -154,7 +164,7 @@ export default function ThemSanPham({
                   file
                     ? URL.createObjectURL(file)
                     : sanPhamDangSua?.hinhAnh
-                      ? `http://localhost:8081/uploads/${sanPhamDangSua.hinhAnh}`
+                      ? getProductImageUrl(sanPhamDangSua.hinhAnh)
                       : "",
                 );
               }}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
+import { getProductImageUrl } from "../../lib/productImageUrl";
 import ThemSuaSanPham from "./ThemSuaSanPham";
 export default function AdminProducts() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -86,7 +87,7 @@ export default function AdminProducts() {
               <td className="px-5 py-3">{sanPham.soLuongTon}</td>
               <td className="px-5 py-3">
                 <img
-                  src={`http://localhost:8081/uploads/${sanPham.hinhAnh}`}
+                  src={getProductImageUrl(sanPham.hinhAnh)}
                   alt={sanPham.tenSanPham}
                   className="w-16 h-16 object-cover"
                 />

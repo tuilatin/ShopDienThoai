@@ -13,6 +13,7 @@ import {
 } from "./ui/card";
 import { useParams } from "react-router-dom";
 import { getGuestCart, saveGuestCart } from "../lib/cartStorage";
+import { getProductImageUrl } from "../lib/productImageUrl";
 
 export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
@@ -51,7 +52,7 @@ export default function ProductDetail() {
       >
         <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
         <img
-          src={sanPham?.hinhAnh}
+          src={getProductImageUrl(sanPham?.hinhAnh)}
           alt="Event cover"
           className="relative z-20 aspect-video w-full object-cover  "
         />

@@ -9,6 +9,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import { getProductImageUrl } from "../lib/productImageUrl";
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("vi-VN", {
@@ -134,7 +135,7 @@ export default function Home() {
                     <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-[#f1f3f6] p-5">
                       {sanPham.hinhAnh ? (
                         <img
-                          src={sanPham.hinhAnh}
+                          src={getProductImageUrl(sanPham.hinhAnh)}
                           alt={sanPham.tenSanPham}
                           loading="lazy"
                           className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
