@@ -48,7 +48,7 @@ export default function ThemSanPham({
         const upLoadForm = new FormData();
         upLoadForm.append("file", selectedImage);
         const upLoadImageResponse = await apiClient.post(
-          "/sanPham/upload-image",
+          "/sanpham/upload-image",
           upLoadForm,
         );
         hinhAnh = upLoadImageResponse.data.url;
@@ -66,6 +66,7 @@ export default function ThemSanPham({
         ? await apiClient.put(`/sanpham/${sanPhamDangSua.maSanPham}`, payload)
         : await apiClient.post("/sanpham", payload);
       console.log(response.data);
+      onProductCreated(response.data);
     } catch (error) {
       console.log("Lỗi :", error);
     }
