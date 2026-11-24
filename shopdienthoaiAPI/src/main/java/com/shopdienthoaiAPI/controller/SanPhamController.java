@@ -32,8 +32,8 @@ public class SanPhamController {
 //liên quan tới hiển thị sản phẩm
 
     @GetMapping
-    public ResponseEntity<Page<SanPhamDto.Response>> findAll(@RequestParam(required = false, defaultValue = "") String maSanPham,
-                                                             @RequestParam(required = false, defaultValue = "") String maDanhMuc,
+    public ResponseEntity<Page<SanPhamDto.Response>> findAll(@RequestParam(required = false, defaultValue = "") String maDanhMuc,
+                                                             @RequestParam(required = false, defaultValue = "") String tenSanPham,
                                                              @ParameterObject
                                                              @PageableDefault(
                                                                      size = 100,
@@ -41,7 +41,7 @@ public class SanPhamController {
                                                              )
                                                                  Pageable pageable
                                                              ) {
-        return ResponseEntity.ok(sanPhamService.timKiemVaLoc(maSanPham, maDanhMuc, pageable));
+        return ResponseEntity.ok(sanPhamService.timKiemVaLoc(maDanhMuc, tenSanPham, pageable));
     }
 
 

@@ -21,8 +21,37 @@ export default function AdminProducts() {
   }, []);
 
   //truyền xuống component con hàm này bằng props
-  const onProductCreated = (newProduct) => {
-    setSanPhams((preProducts) => [...preProducts, newProduct]);
+  const onProductCreated = (sanPhamTruyenVao) => {
+    setSanPhams((products) => {
+      const productExists = products.some(
+        (product) => product.maSanPham == sanPhamTruyenVao.maSanPham,
+      );
+
+      if (productExists) {
+        return products.map((product) =>
+          product.maSanPham == sanPhamTruyenVao.maSanPham
+            ? sanPhamTruyenVao
+            : product,
+        );
+      }
+      return [...products, sanPhamTruyenVao];
+    });
+  };
+
+  const deleteProduct = async (masanpham) => {
+    const confirmed = window.confirm(
+      `Bạn có chắc muốn xóa sản phẩm có mã "${masanpham}" không?`,
+    );
+    if (!confirmed) return;
+    try {
+      await apiClient.delete(`/sanpham/${masanpham}`);
+      (setSanPhams((products) =>
+        products.filter((product) => product.maSanPham !== masanpham),
+      ),
+        console.log("Xóa sản phẩm có mã số " + masanpham + " thành công"));
+    } catch (error) {
+      console.log("Lỗi khi xóa sản phẩm ", error);
+    }
   };
 
   const sanPhamMoiNhat = sanPhams.reduce((max, sp) => {
@@ -42,15 +71,32 @@ export default function AdminProducts() {
 
   return (
     <>
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
-        onClick={() => {
-          setSanPhamDangSua(null);
-          setIsFormOpen(true);
-        }}
-      >
-        Thêm Sản Phẩm
-      </button>
+      <div className="flex flex-col items-start gap-3">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
+          onClick={() => {
+            setSanPhamDangSua(null);
+            setIsFormOpen(true);
+          }}
+        >
+          Thêm Sản Phẩm
+        </button>
+        <p>Form tìm kiếm</p>
+        <div className="flex mb-4">
+          <input
+            type="text"
+            placeholder="Tìm sản phẩm..."
+            className="border-2 border-amber-400 w-80 p-2"
+          />
+
+          <select name="" id="">
+            <option value="">Chọn danh mục</option>
+          </select>
+          <button className="bg-cyan-500 w-20 rounded hover:bg-amber-700 cursor-pointer">
+            Tìm kiếm
+          </button>
+        </div>
+      </div>
       {isFormOpen && (
         <ThemSuaSanPham
           key={sanPhamDangSua?.maSanPham ?? "them-moi"}
@@ -104,7 +150,10 @@ export default function AdminProducts() {
                 >
                   Sửa
                 </button>
-                <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-2">
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
+                  onClick={() => deleteProduct(sanPham.maSanPham)}
+                >
                   Xóa
                 </button>
               </td>
