@@ -13,7 +13,6 @@ export default function AdminProducts() {
       try {
         const response = await apiClient.get("/sanpham");
         setSanPhams(response.data.content);
-        console.log("sanphamData= ", response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -53,6 +52,21 @@ export default function AdminProducts() {
         console.log("Xóa sản phẩm có mã số " + masanpham + " thành công"));
     } catch (error) {
       console.log("Lỗi khi xóa sản phẩm ", error);
+    }
+  };
+
+  const searchProduct = async () => {
+    try {
+      const response = await apiClient.get("/sanpham", {
+        params: {
+          tenSanPham: tuKhoa,
+          page: 0,
+          size: 10,
+        },
+      });
+      setSanPhams(response.data.content);
+    } catch (error) {
+      console.log("Tìm kiếm thất bại", error);
     }
   };
 
@@ -98,7 +112,7 @@ export default function AdminProducts() {
           <button
             className="bg-cyan-500 w-20 rounded
            hover:bg-amber-700 cursor-pointer"
-            onClick={() => console.log("bạn đang tìm kiếm", tuKhoa)}
+            onClick={() => searchProduct()}
           >
             Tìm kiếm
           </button>
