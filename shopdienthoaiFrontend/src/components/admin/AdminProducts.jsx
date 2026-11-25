@@ -6,6 +6,8 @@ export default function AdminProducts() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [sanPhamDangSua, setSanPhamDangSua] = useState(null);
   const [sanPhams, setSanPhams] = useState([]);
+  const [tuKhoa, setTuKhoa] = useState("");
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -82,17 +84,22 @@ export default function AdminProducts() {
           Thêm Sản Phẩm
         </button>
         <p>Form tìm kiếm</p>
-        <div className="flex mb-4">
+        <div className="flex mb-4 gap-3">
           <input
             type="text"
             placeholder="Tìm sản phẩm..."
-            className="border-2 border-amber-400 w-80 p-2"
+            className="border-2 border-amber-400 w-80 p-2 rounded"
+            onChange={(event) => setTuKhoa(event.target.value)}
           />
 
-          <select name="" id="">
+          <select name="" id="" className="bg-amber-500 rounded">
             <option value="">Chọn danh mục</option>
           </select>
-          <button className="bg-cyan-500 w-20 rounded hover:bg-amber-700 cursor-pointer">
+          <button
+            className="bg-cyan-500 w-20 rounded
+           hover:bg-amber-700 cursor-pointer"
+            onClick={() => console.log("bạn đang tìm kiếm", tuKhoa)}
+          >
             Tìm kiếm
           </button>
         </div>
