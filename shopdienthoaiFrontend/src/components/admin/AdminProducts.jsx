@@ -15,6 +15,7 @@ export default function AdminProducts() {
   const [tuKhoa, setTuKhoa] = useState("");
   const [danhMucs, setDanhMucs] = useState([]);
   const [maDanhMuc, setMaDanhMuc] = useState("");
+  const [soTrangHienTai, setSoTrangHienTai] = useState(1);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -85,6 +86,24 @@ export default function AdminProducts() {
     }
   };
 
+  const searchProductPagination = async (trangMoi) => {
+    try {
+      const response = await apiClient.get("/sanpham", {
+        params: {
+          page: trangMoi - 1,
+          size: 5,
+          tenSanPham: tuKhoa,
+          maDanhMuc,
+        },
+      });
+      setSanPhams(response.data.content);
+      setSoTrangHienTai(trangMoi);
+      console.log(response.data.content);
+    } catch (error) {
+      console.log("Tìm kiếm thất bại", error);
+    }
+  };
+
   const sanPhamMoiNhat = sanPhams.reduce((max, sp) => {
     if (!max) return sp;
 
@@ -99,6 +118,10 @@ export default function AdminProducts() {
   const maTiepTheo = maMoiNhat
     ? `SP${String(Number(maMoiNhat.slice(2)) + 1).padStart(3, "0")}`
     : "SP001";
+
+  useEffect(() => {
+    console.log("Số trang hiện tại:", soTrangHienTai);
+  }, [soTrangHienTai]);
 
   return (
     <>
@@ -224,6 +247,9 @@ export default function AdminProducts() {
             type="button"
             aria-label="Trang trước"
             className="grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+            onClick={() => {
+              searchProductPagination(Math.max(1, soTrangHienTai - 1));
+            }}
           >
             <ChevronLeft size={18} />
           </button>
@@ -232,7 +258,8 @@ export default function AdminProducts() {
             <input
               type="number"
               min="1"
-              defaultValue="1"
+              value={`${soTrangHienTai}`}
+              // onChange={(event) => setSoTrangHienTai(event.target.value)}
               aria-label="Số trang"
               className="h-9 w-12 rounded-lg border border-blue-200 bg-blue-50 text-center font-semibold text-blue-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
@@ -243,6 +270,7 @@ export default function AdminProducts() {
             type="button"
             aria-label="Trang tiếp theo"
             className="ml-1 grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+            onClick={() => searchProductPagination(soTrangHienTai + 1)}
           >
             <ChevronRight size={18} />
           </button>
