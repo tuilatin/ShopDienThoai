@@ -228,15 +228,15 @@ export default function AdminProducts() {
             <ChevronLeft size={18} />
           </button>
 
-          <label className="ml-1 flex items-center gap-2 text-sm text-slate-600">
-            Trang
+          <label className="ml-1 flex items-center gap-1 text-sm font-medium text-slate-600">
             <input
               type="number"
               min="1"
               defaultValue="1"
               aria-label="Số trang"
-              className="h-9 w-14 rounded-lg border border-blue-200 bg-blue-50 text-center font-semibold text-blue-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="h-9 w-12 rounded-lg border border-blue-200 bg-blue-50 text-center font-semibold text-blue-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
+            <span aria-hidden="true">/ 20</span>
           </label>
 
           <button
