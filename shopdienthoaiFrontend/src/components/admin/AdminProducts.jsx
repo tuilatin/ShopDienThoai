@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import apiClient from "../../api/apiClient";
 import { getProductImageUrl } from "../../lib/productImageUrl";
 import ThemSuaSanPham from "./ThemSuaSanPham";
@@ -7,12 +13,20 @@ export default function AdminProducts() {
   const [sanPhamDangSua, setSanPhamDangSua] = useState(null);
   const [sanPhams, setSanPhams] = useState([]);
   const [tuKhoa, setTuKhoa] = useState("");
+  const [danhMucs, setDanhMucs] = useState([]);
+  const [maDanhMuc, setMaDanhMuc] = useState("");
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await apiClient.get("/sanpham");
+        const response = await apiClient.get("/sanpham", {
+          params: {
+            size: 5,
+          },
+        });
+        const danhMucs = await apiClient.get("/danhmuc");
         setSanPhams(response.data.content);
+        setDanhMucs(danhMucs.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -60,8 +74,9 @@ export default function AdminProducts() {
       const response = await apiClient.get("/sanpham", {
         params: {
           tenSanPham: tuKhoa,
+          maDanhMuc: maDanhMuc,
           page: 0,
-          size: 10,
+          size: 5,
         },
       });
       setSanPhams(response.data.content);
@@ -106,9 +121,20 @@ export default function AdminProducts() {
             onChange={(event) => setTuKhoa(event.target.value)}
           />
 
-          <select name="" id="" className="bg-amber-500 rounded">
+          <select
+            name="maDanhMuc"
+            id="maDanhMuc"
+            className="rounded border-2 border-amber-200 bg-amber-100"
+            onChange={(event) => setMaDanhMuc(event.target.value)}
+          >
             <option value="">Chọn danh mục</option>
+            {danhMucs.map((danhMuc) => (
+              <option key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
+                {danhMuc.tenDanhMuc}
+              </option>
+            ))}
           </select>
+
           <button
             className="bg-cyan-500 w-20 rounded
            hover:bg-amber-700 cursor-pointer"
@@ -182,6 +208,53 @@ export default function AdminProducts() {
           ))}
         </tbody>
       </table>
+      <div className="mt-5 flex justify-center rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <nav
+          aria-label="Điều hướng trang sản phẩm"
+          className="flex items-center justify-self-center gap-1.5"
+        >
+          <button
+            type="button"
+            aria-label="Trang đầu"
+            className="grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+          >
+            <ChevronsLeft size={18} />
+          </button>
+          <button
+            type="button"
+            aria-label="Trang trước"
+            className="grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+          >
+            <ChevronLeft size={18} />
+          </button>
+
+          <label className="ml-1 flex items-center gap-2 text-sm text-slate-600">
+            Trang
+            <input
+              type="number"
+              min="1"
+              defaultValue="1"
+              aria-label="Số trang"
+              className="h-9 w-14 rounded-lg border border-blue-200 bg-blue-50 text-center font-semibold text-blue-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            />
+          </label>
+
+          <button
+            type="button"
+            aria-label="Trang tiếp theo"
+            className="ml-1 grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+          >
+            <ChevronRight size={18} />
+          </button>
+          <button
+            type="button"
+            aria-label="Trang cuối"
+            className="grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+          >
+            <ChevronsRight size={18} />
+          </button>
+        </nav>
+      </div>
     </>
   );
 }
