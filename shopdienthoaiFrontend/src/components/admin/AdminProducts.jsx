@@ -16,6 +16,7 @@ export default function AdminProducts() {
   const [danhMucs, setDanhMucs] = useState([]);
   const [maDanhMuc, setMaDanhMuc] = useState("");
   const [soTrangHienTai, setSoTrangHienTai] = useState(1);
+  const [tongSoTrang, setTongSoTrang] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,6 +26,7 @@ export default function AdminProducts() {
             size: 5,
           },
         });
+        setTongSoTrang(response.data.totalPages);
         const danhMucs = await apiClient.get("/danhmuc");
         setSanPhams(response.data.content);
         setDanhMucs(danhMucs.data);
@@ -240,6 +242,7 @@ export default function AdminProducts() {
             type="button"
             aria-label="Trang đầu"
             className="grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+            onClick={() => searchProductPagination(1)}
           >
             <ChevronsLeft size={18} />
           </button>
@@ -263,14 +266,16 @@ export default function AdminProducts() {
               aria-label="Số trang"
               className="h-9 w-12 rounded-lg border border-blue-200 bg-blue-50 text-center font-semibold text-blue-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
-            <span aria-hidden="true">/ 20</span>
+            <span aria-hidden="true">/ {tongSoTrang}</span>
           </label>
 
           <button
             type="button"
             aria-label="Trang tiếp theo"
             className="ml-1 grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-            onClick={() => searchProductPagination(soTrangHienTai + 1)}
+            onClick={() =>
+              searchProductPagination(Math.min(soTrangHienTai + 1, tongSoTrang))
+            }
           >
             <ChevronRight size={18} />
           </button>
@@ -278,6 +283,7 @@ export default function AdminProducts() {
             type="button"
             aria-label="Trang cuối"
             className="grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+            onClick={() => searchProductPagination(tongSoTrang)}
           >
             <ChevronsRight size={18} />
           </button>
